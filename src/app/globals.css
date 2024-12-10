@@ -2,22 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
-* {
-  @apply transition-all duration-100;
-}
-
+/* Base styles */
 :root {
   --background: #fafafa;
   --foreground: #262626;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #262626;
-    --foreground: #fafafa;
-  }
+html.dark {
+  --background: #262626;
+  --foreground: #fafafa;
 }
 
+/* Apply global background and text color */
 html {
   background-color: var(--background);
   color: var(--foreground);

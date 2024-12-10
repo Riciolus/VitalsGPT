@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { Inter } from "next/font/google";
 import { ThemeProvider } from "@/components/wrappers/ThemeProvider";
+import Navbar from "@/components/layout/Navbar";
 
 export const metadata: Metadata = {
   title: "VitalsGPT",
@@ -18,9 +19,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.className} antialiased`}>
-        <ThemeProvider attribute="class" defaultTheme="light">
-          {children}
+      <body className={`${inter.className} bg-background text-foreground antialiased`}>
+        <ThemeProvider attribute="class" defaultTheme="light" disableTransitionOnChange>
+          <Navbar />
+          <main className="h-screen">{children}</main>
         </ThemeProvider>
       </body>
     </html>

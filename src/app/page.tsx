@@ -10,7 +10,7 @@ export default function ThemeToggle() {
   };
 
   return (
-    <div className="bg-background text-foreground h-screen dark:bg-foreground dark:text-background">
+    <div className="">
       <button onClick={handleChangeTheme} className="p-3 ">
         Toggle Theme
       </button>
