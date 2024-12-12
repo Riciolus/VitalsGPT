@@ -1,19 +1,14 @@
 "use client";
 
-import { useTheme } from "next-themes";
+import ChatInterface from "@/components/features/chat/VitalsChat";
+import Sidebar from "@/components/layout/Sidebar";
 
 export default function ThemeToggle() {
-  const { theme, setTheme } = useTheme();
-
-  const handleChangeTheme = () => {
-    setTheme(theme === "dark" ? "light" : "dark");
-  };
-
   return (
-    <div className="">
-      <button onClick={handleChangeTheme} className="p-3 ">
-        Toggle Theme
-      </button>
+    <div className="flex h-screen">
+      <Sidebar />
+
+      <ChatInterface />
     </div>
   );
 }

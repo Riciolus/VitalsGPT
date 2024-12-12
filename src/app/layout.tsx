@@ -20,7 +20,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${inter.className} bg-background text-foreground antialiased`}>
-        <ThemeProvider attribute="class" defaultTheme="light" disableTransitionOnChange>
+        <ThemeProvider attribute="class" defaultTheme="light">
           <Navbar />
           <main className="h-screen">{children}</main>
         </ThemeProvider>
