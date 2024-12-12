@@ -1,3 +1,4 @@
+import Button from "@/components/ui/button";
 import { useTheme } from "next-themes";
 
 export default function ChatInterface() {
@@ -5,10 +6,10 @@ export default function ChatInterface() {
 
   return (
     <>
-      <div className="w-full bg-background">
-        <button onClick={() => setTheme(theme === "dark" ? "light" : "dark")} className="p-3 ">
-          Toggle Theme
-        </button>
+      <div className="w-full  bg-background">
+        <div className="p-5">
+          <Button onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>Theme</Button>
+        </div>
       </div>
     </>
   );
