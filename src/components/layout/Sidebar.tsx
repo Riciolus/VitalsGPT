@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Button from "../ui/button";
 import Input from "../ui/input";
 import { cn } from "@/lib/utils";
+import { useTheme } from "next-themes";
 
 const ToggleSidebarButton = ({ onClick }: { onClick: () => void }) => {
   return (
@@ -24,12 +25,13 @@ const ToggleSidebarButton = ({ onClick }: { onClick: () => void }) => {
 
 const Sidebar = () => {
   const [toggleSidebar, setToggleSidebar] = useState(true);
+  const { theme, setTheme } = useTheme();
 
   return (
     <>
       <div
         className={cn(
-          "w-[320px] shrink-0 hidden md:flex bg-background h-screen transition-all ease-out",
+          "w-[320px] fixed md:static shrink-0 flex h-screen transition-all ease-in-out",
           !toggleSidebar && " w-[40px] "
         )}
       >
@@ -85,6 +87,7 @@ const Sidebar = () => {
               </div>
             </div>
           </div>
+          <Button onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>Theme</Button>
         </div>
       </div>
     </>
