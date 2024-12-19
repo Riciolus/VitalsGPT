@@ -17,6 +17,7 @@
     "tailwind-merge": "^2.5.5"
   },
   "devDependencies": {
+    "@gradio/client": "^1.8.0",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",

@@ -2,7 +2,7 @@ import { cn } from "@/lib/utils";
 import React from "react";
 
 type CardProps = {
-  children: string;
+  children: React.ReactNode | string;
   className: string;
 };
 

@@ -87,7 +87,11 @@ const Sidebar = () => {
               </div>
             </div>
           </div>
-          <Button onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>Theme</Button>
+
+          {/* sidebar content */}
+          <div className={cn(!toggleSidebar && "hidden")}>
+            <Button onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>Theme</Button>
+          </div>
         </div>
       </div>
     </>
