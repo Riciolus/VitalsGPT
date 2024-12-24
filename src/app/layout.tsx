@@ -27,11 +27,11 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${poppins.className} bg-background text-foreground  overflow-hidden antialiased`}
+        className={`${poppins.className} bg-background text-foreground  overflow-  antialiased   h-screen max-h-screen`}
       >
         <ThemeProvider attribute="class" defaultTheme="light">
           <Navbar />
-          <main className="h-screen">{children}</main>
+          <main>{children}</main>
         </ThemeProvider>
       </body>
     </html>

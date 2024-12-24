@@ -1,6 +1,6 @@
 "use client";
 
-import VitalsMenu from "@/components/features/chat/VitalsMenu";
+import ChatInterface from "@/components/features/chat/VitalsChat";
 import Sidebar from "@/components/layout/Sidebar";
 
 export default function Main() {
@@ -8,7 +8,7 @@ export default function Main() {
     <div className="flex h-[calc(100vh-4rem)]">
       <Sidebar />
 
-      <VitalsMenu />
+      <ChatInterface />
     </div>
   );
 }
