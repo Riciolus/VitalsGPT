@@ -149,7 +149,7 @@ export default function ChatInterface() {
                   >
                     <Card
                       className={cn(
-                        "bg-neutral-700  w-fit text-base p-2 rounded-lg ",
+                        "w-fit text-base p-2 rounded-lg ",
                         msg.role === "user" ? "max-w-[47%]" : "max-w-[60%]"
                       )}
                     >
@@ -162,7 +162,7 @@ export default function ChatInterface() {
               {assistantMessageBuffer && (
                 <article>
                   <div className=" flex  items-center justify-start">
-                    <Card className="bg-neutral-700  w-fit text-base p-2 rounded-lg max-w-[60%] ">
+                    <Card className="w-fit text-base p-2 rounded-lg max-w-[60%] ">
                       {assistantMessageBuffer}
                     </Card>
                   </div>
@@ -173,7 +173,7 @@ export default function ChatInterface() {
         </div>
 
         {/* lower fixed component */}
-        <div className="absolute bg-neutral-800  bottom-0 pb-6 pt-3 w-full flex justify-center items-center">
+        <div className="absolute bg-background  bottom-0 pb-6 pt-3 w-full flex justify-center items-center">
           {/* input question */}
           <form onSubmit={(e) => handleVitalsChat(e)}>
             <Input
