@@ -88,11 +88,11 @@ export default function VitalsMenu() {
 
   return (
     <>
-      <div className="w-full  flex flex-col justify-center items-center h-full ">
+      <div className="w-full  flex flex-col justify-center items-center   h-full ">
         {/* whole no session interface */}
-        <div className="flex flex-col justify-center items-center gap-3  w-full h-full">
+        <div className="flex flex-col justify-center items-center gap-3   w-full h-full">
           {/* welcome greets */}
-          <div className="flex flex-col items-center gap-1">
+          <div className="flex flex-col items-center gap-1 ">
             <h3 className="font-semibold tracking-wide text-xl">How can I assist you today?</h3>
 
             <div className="flex gap-3">
@@ -117,7 +117,7 @@ export default function VitalsMenu() {
                 id="vitalsInput"
                 onChange={(e) => setUserMessage(e.target.value)}
                 placeholder="Should I take a multivitamin?"
-                className="w-96 h-12"
+                className="w-[18.5rem] md:w-96 h-12"
               />
             </form>
           </div>
