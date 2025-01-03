@@ -31,7 +31,7 @@ const Sidebar = () => {
     <>
       <div
         className={cn(
-          "w-[320px] fixed bg-red md:static shrink-0 flex transition-all ease-in-out",
+          "w-[295px] fixed bg-red md:static shrink-0 flex transition-all ease-in-out",
           !toggleSidebar && " w-[40px] "
         )}
       >

@@ -15,6 +15,7 @@ export default function ChatInterface() {
 
   const handleVitalsChat = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setUserMessage("");
 
     if (!userMessage.trim()) return;
 
@@ -48,7 +49,7 @@ export default function ChatInterface() {
         {/* current height */}
         <div className="overflow-y-auto h-[calc(100vh-9.5rem)]">
           {/* the height is just temporary */}
-          <div className="gap-3 w-full  pr-7 pt-5  overflow-auto">
+          <div className="gap-3 w-full   px-7 pt-5  overflow-auto">
             <div className="flex flex-col gap-3">
               {messages.map((msg, index) => (
                 <article key={index}>
