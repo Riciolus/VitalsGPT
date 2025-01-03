@@ -79,31 +79,11 @@ const categories = [
 
 export default function VitalsMenu() {
   const [userMessage, setUserMessage] = useState<string>("");
-  const [vitalsResponse, setVitalsResponse] = useState<string[]>([]);
 
-  const handleVitalsChat = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleStartSession = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (!userMessage.trim()) return;
-
-    setVitalsResponse([]);
-
-    const url = `${process.env.NEXT_PUBLIC_VITALS_API_URL}?message=${encodeURIComponent(
-      userMessage
-    )}`;
-    const eventSource = new EventSource(url);
-
-    eventSource.onmessage = (event) => {
-      const data = event.data;
-
-      setVitalsResponse((prev) => [...prev, data]);
-    };
-
-    // Handle errors
-    eventSource.onerror = function () {
-      console.info("Error receiving stream");
-      eventSource.close();
-    };
   };
 
   return (
@@ -132,7 +112,7 @@ export default function VitalsMenu() {
 
           <div>
             {/* input question */}
-            <form onSubmit={(e) => handleVitalsChat(e)}>
+            <form onSubmit={(e) => handleStartSession(e)}>
               <Input
                 id="vitalsInput"
                 onChange={(e) => setUserMessage(e.target.value)}
@@ -141,12 +121,6 @@ export default function VitalsMenu() {
               />
             </form>
           </div>
-
-          <ul>
-            {vitalsResponse.map((msg, index) => (
-              <li key={index}>{msg}</li>
-            ))}
-          </ul>
         </div>
       </div>
     </>

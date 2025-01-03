@@ -34,11 +34,14 @@ export async function GET(req: NextRequest) {
           messages: [
             {
               role: "system",
-              content:
-                "You are a knowledgeable and polite medical assistant. Provide general information about medical conditions, including their common causes, symptoms, and basic remedies. Always remind users to consult a healthcare professional for proper diagnosis and treatment. Avoid requiring the user to describe their symptoms unless they choose to do so.",
+              content: "You are a knowledgeable and polite medical assistant.",
+            },
+            {
+              role: "user",
+              content: message,
             },
           ],
-          max_tokens: 500,
+          max_tokens: 200,
         });
 
         // Iterate through the async generator

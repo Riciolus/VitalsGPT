@@ -13,95 +13,6 @@ export default function ChatInterface() {
   const [userMessage, setUserMessage] = useState("");
   const [assistantMessageBuffer, setAssistantMessageBuffer] = useState("");
 
-  // const handleVitalsChat = async (e: React.FormEvent<HTMLFormElement>) => {
-  //   e.preventDefault();
-
-  //   if (!userMessage.trim()) return;
-
-  //   setMessages((prev) => [...prev, { role: "user", text: userMessage }]);
-
-  //   const url = `${process.env.NEXT_PUBLIC_VITALS_API_URL}?message=${encodeURIComponent(
-  //     userMessage
-  //   )}`;
-  //   const eventSource = new EventSource(url);
-
-  //   let assistantMessageIndex = -1; // Track the index of the assistant's message
-  //   let buffer = ""; // Buffer to store unprocessed data
-
-  //   const cleanText = (text) => {
-  //     return text
-  //       .replace(/\s+([,.!?])/g, "$1") // Remove spaces before punctuation
-  //       .replace(/([,.!?])(?=\S)/g, "$1 ") // Add space after punctuation if missing
-  //       .replace(/(\w)\s'\sre/g, "$1're") // Fix "you ' re" -> "you're"
-  //       .replace(/\s+/g, " ") // Collapse multiple spaces
-  //       .trim(); // Trim leading and trailing spaces
-  //   };
-
-  //   const updateMessages = (cleanedText) => {
-  //     console.log("Updating Messages with:", cleanedText);
-
-  //     setMessages((prev) => {
-  //       console.log("Current Messages (before update):", prev);
-
-  //       const updatedMessages = [...prev];
-
-  //       if (assistantMessageIndex === -1) {
-  //         // Initialize assistant's first message
-  //         assistantMessageIndex = updatedMessages.length;
-  //         console.log("Initializing assistant message at index:", assistantMessageIndex);
-  //         updatedMessages.push({ role: "assistant", text: cleanedText });
-  //       } else if (assistantMessageIndex >= 0 && assistantMessageIndex < updatedMessages.length) {
-  //         const currentText = updatedMessages[assistantMessageIndex].text;
-
-  //         // Avoid duplication
-  //         if (!currentText.includes(cleanedText)) {
-  //           console.log("Appending text to assistant message:", cleanedText);
-  //           updatedMessages[assistantMessageIndex].text += " " + cleanedText;
-  //         } else {
-  //           console.log("Skipping duplicate text:", cleanedText);
-  //         }
-  //       } else {
-  //         console.error("Invalid assistantMessageIndex:", assistantMessageIndex, updatedMessages);
-
-  //         // Reinitialize the assistant message if index is invalid
-  //         assistantMessageIndex = updatedMessages.length;
-  //         updatedMessages.push({ role: "assistant", text: cleanedText });
-  //       }
-
-  //       console.log("Updated Messages (after update):", updatedMessages);
-  //       return updatedMessages;
-  //     });
-  //   };
-
-  //   eventSource.onmessage = (event) => {
-  //     console.log("Raw Event Data:", event.data);
-
-  //     buffer += event.data.trim() + " "; // Append new data to the buffer
-  //     console.log("Buffer Before Split:", buffer);
-
-  //     const sentences = buffer.split(/[.!?]/); // Split into sentences
-  //     const completeSentences = sentences.slice(0, -1); // Get complete sentences
-  //     buffer = sentences[sentences.length - 1]; // Retain last incomplete fragment
-
-  //     console.log("Complete Sentences:", completeSentences);
-  //     console.log("Buffer After Split:", buffer);
-
-  //     completeSentences.forEach((sentence) => {
-  //       const cleanedText = cleanText(sentence + ".");
-  //       updateMessages(cleanedText); // Safely update messages
-  //     });
-  //   };
-
-  //   eventSource.onopen = () => console.info("Stream opened");
-
-  //   eventSource.onerror = () => {
-  //     console.error("Error receiving stream");
-  //     eventSource.close();
-  //   };
-
-  //   setUserMessage("");
-  // };
-
   const handleVitalsChat = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -179,6 +90,7 @@ export default function ChatInterface() {
             <Input
               id="vitalsInput"
               onChange={(e) => setUserMessage(e.target.value)}
+              value={userMessage}
               placeholder="I'd like to..."
               className="w-[26rem] h-12"
             />
