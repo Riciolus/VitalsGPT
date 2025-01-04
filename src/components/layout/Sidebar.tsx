@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "../ui/button";
 import Input from "../ui/input";
 import { cn } from "@/lib/utils";
@@ -26,13 +26,13 @@ const ToggleSidebarButton = ({ onClick }: { onClick: () => void }) => {
 };
 
 const Sidebar = () => {
-  const [toggleSidebar, setToggleSidebar] = useState(window.innerWidth > 762);
+  const [toggleSidebar, setToggleSidebar] = useState(false);
   const { theme, setTheme } = useTheme();
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
-    console.log(window.innerWidth > 762);
     setIsMounted(true); // Ensure component only renders after hydration
+    setToggleSidebar(window.innerWidth > 762);
   }, []);
 
   return (
@@ -131,7 +131,7 @@ const Sidebar = () => {
               {/* toggle theme button */}
               <div className="hidden md:flex">
                 <Button onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>
-                  {isMounted && theme && theme == "light" ? (
+                  {isMounted && theme == "light" ? (
                     // moon icon
                     <svg width="28px" height="28px" fill="none" viewBox="0 0 24 24">
                       <path

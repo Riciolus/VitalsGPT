@@ -5,9 +5,16 @@ import Avatar from "../features/profile/Avatar";
 import Link from "next/link";
 import Button from "../ui/button";
 import { useTheme } from "next-themes";
+import { useEffect, useState } from "react";
 
 const Navbar = () => {
   const { theme, setTheme } = useTheme();
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true); // Ensure component only renders after hydration
+  }, []);
+
   return (
     <nav className="flex justify-between items-center h-16 w-full px-7 border-b dark:border-neutral-700">
       <Link href="/" className="flex items-center gap-2">
@@ -43,7 +50,7 @@ const Navbar = () => {
           {/* toggle theme button */}
           <div className="flex md:hidden">
             <Button onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>
-              {theme == "light" ? (
+              {isMounted && theme == "light" ? (
                 // moon icon
                 <svg width="25px" height="25px" fill="none" viewBox="0 0 24 24">
                   <path
