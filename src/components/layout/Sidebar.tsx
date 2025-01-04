@@ -26,11 +26,12 @@ const ToggleSidebarButton = ({ onClick }: { onClick: () => void }) => {
 };
 
 const Sidebar = () => {
-  const [toggleSidebar, setToggleSidebar] = useState(true);
+  const [toggleSidebar, setToggleSidebar] = useState(window.innerWidth > 762);
   const { theme, setTheme } = useTheme();
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
+    console.log(window.innerWidth > 762);
     setIsMounted(true); // Ensure component only renders after hydration
   }, []);
 
@@ -38,7 +39,7 @@ const Sidebar = () => {
     <>
       <div
         className={cn(
-          "w-[295px] h-full  fixed bg-red md:static  bg-background shrink-0 flex transition-all duration-[50ms] ease-in-out",
+          "w-[295px] h-full max-h-[calc(100vh-4rem)] z-50  fixed  md:static  bg-background shrink-0 flex transition-all duration-[50ms] ease-in-out",
           !toggleSidebar && " w-[40px] "
         )}
       >
@@ -126,9 +127,9 @@ const Sidebar = () => {
             </div>
 
             {/* lower sidebar content*/}
-            <div>
+            <div className="">
               {/* toggle theme button */}
-              <div>
+              <div className="hidden md:flex">
                 <Button onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>
                   {isMounted && theme && theme == "light" ? (
                     // moon icon

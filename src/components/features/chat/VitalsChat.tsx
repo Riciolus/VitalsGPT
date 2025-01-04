@@ -54,7 +54,7 @@ export default function ChatInterface() {
 
   return (
     <>
-      <div className="relative w-full   ">
+      <div className="md:relative w-full   ">
         {/* whole session interface */}
 
         {/* chat area */}
@@ -105,7 +105,7 @@ export default function ChatInterface() {
               onChange={(e) => setUserMessage(e.target.value)}
               value={userMessage}
               placeholder="I'd like to..."
-              className="w-[26rem] h-12"
+              className="w-[calc(100vw-5rem)] sm:w-[30rem] md:w-[26rem] h-12"
             />
           </form>
         </div>
