@@ -18,9 +18,13 @@ const Navbar = () => {
   return (
     <nav className="flex justify-between items-center h-16 w-full px-7 border-b dark:border-neutral-700">
       <Link href="/" className="flex items-center gap-2">
-        <div>
-          <Image src="icon.svg" alt="icon" width={30} height={30} />
-        </div>
+        <Image
+          src="icon.svg"
+          alt="icon"
+          width={30}
+          height={30}
+          style={{ width: "30px", height: "30px" }}
+        />
         <span className="font-bold">VitalsGPT</span>
       </Link>
 

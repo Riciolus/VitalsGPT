@@ -17,7 +17,7 @@ const ToggleSidebarButton = ({ onClick }: { onClick: () => void }) => {
             strokeWidth="1.5"
             strokeLinecap="round"
             strokeLinejoin="round"
-            className="stroke-neutral-400 dark:stroke-neutral-500"
+            className="stroke-neutral-400 dark:stroke-neutral-500 fill-background"
           />
         </svg>
       </Button>
@@ -40,13 +40,13 @@ const Sidebar = () => {
       <div
         className={cn(
           "w-[295px] h-full max-h-[calc(100vh-4rem)] z-50  fixed  md:static  bg-background shrink-0 flex transition-all duration-[50ms] ease-in-out",
-          !toggleSidebar && " w-[40px] "
+          !toggleSidebar && " w-[40px] h-fit bg-transparent"
         )}
       >
         <div
           className={cn(
-            "p-3 border-r flex flex-col  border-neutral-200 dark:border-neutral-700",
-            !toggleSidebar && " border-none transition-all duration-[50ms]"
+            "p-3 border-r flex flex-col  border-neutral-200 bg-background w-fit dark:border-neutral-700",
+            !toggleSidebar && "border-none transition-all duration-[50ms]"
           )}
         >
           <div className="upper-sidebar-wrapper flex items-center gap-3 justify-between w-full">

@@ -25,7 +25,7 @@ export default function ChatInterface() {
         inline: "start",
       });
     }
-  }, [assistantMessageBuffer, userMessage]); // Scrolls to bottom whenever `messages` change
+  }, [messages, assistantMessageBuffer]); // Scrolls to bottom whenever `messages` change
 
   const handleVitalsChat = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -63,7 +63,10 @@ export default function ChatInterface() {
         {/* current height */}
         <div className="overflow-y-auto h-[calc(100vh-9.5rem)]">
           {/* the height is just temporary */}
-          <div ref={chatContainerRef} className="gap-3 w-full   px-7 pt-5 overflow-auto">
+          <div
+            ref={chatContainerRef}
+            className="gap-3 w-full  px-7 pt-5 overflow-y-auto overflow-x-hidden"
+          >
             <div className="flex flex-col gap-3">
               {messages.map((msg, index) => (
                 <article key={index}>
@@ -76,7 +79,9 @@ export default function ChatInterface() {
                     <Card
                       className={cn(
                         "w-fit text-base p-2 rounded-lg ",
-                        msg.role === "user" ? "max-w-[47%]" : "max-w-[60%]"
+                        msg.role === "user"
+                          ? "max-w-[80%] md:max-w-[47%]"
+                          : "max-w-[80%] md:max-w-[60%]"
                       )}
                     >
                       {msg.text}
@@ -88,7 +93,7 @@ export default function ChatInterface() {
               {assistantMessageBuffer && (
                 <article>
                   <div className=" flex  items-center justify-start">
-                    <Card className="w-fit text-base p-2 rounded-lg max-w-[60%] ">
+                    <Card className="w-fit text-base p-2 rounded-lg max-w-[80%] md:max-w-[60%] ">
                       {assistantMessageBuffer}
                     </Card>
                   </div>
