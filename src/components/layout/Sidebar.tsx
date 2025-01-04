@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+"use client";
+
+import React, { useEffect, useState } from "react";
 import Button from "../ui/button";
 import Input from "../ui/input";
 import { cn } from "@/lib/utils";
@@ -26,6 +28,11 @@ const ToggleSidebarButton = ({ onClick }: { onClick: () => void }) => {
 const Sidebar = () => {
   const [toggleSidebar, setToggleSidebar] = useState(true);
   const { theme, setTheme } = useTheme();
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true); // Ensure component only renders after hydration
+  }, []);
 
   return (
     <>
@@ -89,9 +96,9 @@ const Sidebar = () => {
           </div>
 
           {/* sidebar content */}
-          <div className={cn(!toggleSidebar && "hidden", "flex flex-col h-full")}>
+          <div className={cn("flex flex-col h-full", !toggleSidebar && "hidden")}>
             <div className="h-full">
-              <div className="mt-8 flex flex-col gap-2 justify-center items-center ">
+              <div className="mt-8 flex flex-col gap-2 justify-center items-center">
                 <Button className="flex justify-center items-center gap-1 outline-none rounded-md border bg-lime-600 dark:bg-lime-800 bg-opacity-25 dark:bg-opacity-55 p-1.5 text-xs transition-all duration-[50ms]">
                   <svg
                     className="w-3 h-3 fill-neutral-600 dark:fill-foreground"
@@ -123,7 +130,7 @@ const Sidebar = () => {
               {/* toggle theme button */}
               <div>
                 <Button onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>
-                  {theme === "light" ? (
+                  {isMounted && theme && theme == "light" ? (
                     // moon icon
                     <svg width="28px" height="28px" fill="none" viewBox="0 0 24 24">
                       <path
@@ -131,7 +138,7 @@ const Sidebar = () => {
                         strokeWidth="2"
                         strokeLinecap="round"
                         strokeLinejoin="round"
-                        className="stroke-neutral-400 "
+                        className="stroke-neutral-400"
                       />
                     </svg>
                   ) : (
@@ -139,7 +146,6 @@ const Sidebar = () => {
                     <svg width="28px" height="28px" viewBox="0 0 24 24" fill="none">
                       <path
                         d="M7.45508 2V3M11.3438 3.61084L10.6366 4.31795M4.27344 10.6821L3.56633 11.3892M1.95508 7.5H2.95508M3.56641 3.61084L4.27351 4.31795M6.50049 9.21251C6.38862 9.15163 6.2832 9.08038 6.18553 9.00006C5.73952 8.63325 5.45508 8.07714 5.45508 7.45459C5.45508 6.35002 6.35051 5.45459 7.45508 5.45459C8.21398 5.45459 8.87416 5.87727 9.21303 6.50006C9.29756 6.65541 9.3621 6.82321 9.40319 7M9.8 21C7.14903 21 5 18.9466 5 16.4137C5 14.3144 6.6 12.375 9 12C9.75283 10.274 11.5346 9 13.6127 9C16.2747 9 18.4504 10.9907 18.6 13.5C20.0127 14.0956 21 15.5574 21 17.1402C21 19.2719 19.2091 21 17 21L9.8 21Z"
-                        stroke="#000000"
                         strokeWidth="2"
                         strokeLinecap="round"
                         strokeLinejoin="round"

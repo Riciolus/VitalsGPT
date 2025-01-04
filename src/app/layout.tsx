@@ -29,7 +29,7 @@ export default function RootLayout({
       <body
         className={`${poppins.className} bg-background text-foreground  overflow-hidden  antialiased   h-screen max-h-screen`}
       >
-        <ThemeProvider attribute="class" defaultTheme="light">
+        <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
           <Navbar />
           <main>{children}</main>
         </ThemeProvider>

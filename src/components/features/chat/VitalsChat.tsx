@@ -1,7 +1,7 @@
 import Card from "@/components/ui/card";
 import Input from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 type message = {
   role: "assistant" | "user";
@@ -12,6 +12,18 @@ export default function ChatInterface() {
   const [messages, setMessages] = useState<message[]>([]);
   const [userMessage, setUserMessage] = useState("");
   const [assistantMessageBuffer, setAssistantMessageBuffer] = useState("");
+
+  const chatContainerRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "end",
+        inline: "start",
+      });
+    }
+  }, [assistantMessageBuffer, userMessage]); // Scrolls to bottom whenever `messages` change
 
   const handleVitalsChat = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -49,7 +61,7 @@ export default function ChatInterface() {
         {/* current height */}
         <div className="overflow-y-auto h-[calc(100vh-9.5rem)]">
           {/* the height is just temporary */}
-          <div className="gap-3 w-full   px-7 pt-5  overflow-auto">
+          <div ref={chatContainerRef} className="gap-3 w-full   px-7 pt-5 overflow-auto">
             <div className="flex flex-col gap-3">
               {messages.map((msg, index) => (
                 <article key={index}>
@@ -85,7 +97,7 @@ export default function ChatInterface() {
         </div>
 
         {/* lower fixed component */}
-        <div className="absolute bg-background  bottom-0 pb-6 pt-3 w-full flex justify-center items-center">
+        <div className="absolute bg-background  bottom-0 pb-6 pt-3 w-full flex justify-center text-neutral-500 dark:text-neutral-400 items-center">
           {/* input question */}
           <form onSubmit={(e) => handleVitalsChat(e)}>
             <Input
