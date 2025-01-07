@@ -45,7 +45,7 @@ const Sidebar = () => {
       >
         <div
           className={cn(
-            "p-3 border-r flex flex-col  border-neutral-200 bg-background w-fit dark:border-neutral-700",
+            "p-3 border-r flex flex-col  border-neutral-200  w-fit dark:border-neutral-700",
             !toggleSidebar && "border-none transition-all duration-[50ms]"
           )}
         >

@@ -26,6 +26,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1, interactive-widget=resizes-content"
+        />
+      </head>
       <body
         className={`${poppins.className} bg-background text-foreground  overflow-hidden  antialiased   h-screen max-h-screen`}
       >

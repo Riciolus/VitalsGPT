@@ -56,7 +56,7 @@ export default function ChatInterface() {
 
   return (
     <>
-      <div className="md:relative w-full   ">
+      <div className="md:relative w-full">
         {/* whole session interface */}
 
         {/* chat area */}
