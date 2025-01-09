@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { ThemeProvider } from "@/components/wrappers/ThemeProvider";
-import Navbar from "@/components/layout/Navbar";
 import { Poppins } from "next/font/google";
+import { SessionProvider } from "next-auth/react";
+import NavbarWrapper from "@/components/wrappers/NavbarWrapper";
 
 export const metadata: Metadata = {
   title: "VitalsGPT",
@@ -35,10 +36,12 @@ export default function RootLayout({
       <body
         className={`${poppins.className} bg-background text-foreground  overflow-hidden  antialiased   h-screen max-h-screen`}
       >
-        <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
-          <Navbar />
-          <main>{children}</main>
-        </ThemeProvider>
+        <SessionProvider>
+          <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
+            <NavbarWrapper />
+            <main>{children}</main>
+          </ThemeProvider>
+        </SessionProvider>
       </body>
     </html>
   );

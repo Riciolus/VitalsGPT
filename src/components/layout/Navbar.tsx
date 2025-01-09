@@ -30,7 +30,10 @@ const Navbar = () => {
 
       <div className="flex items-center gap-5">
         <div className="info md:flex items-center gap-5 hidden">
-          <a href="/docs" className="flex gap-1 items-center group cursor-pointer">
+          <a
+            href="https://github.com/Riciolus/VitalsGPT"
+            className="flex gap-1 items-center group cursor-pointer"
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               x="0px"
