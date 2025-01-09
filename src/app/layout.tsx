@@ -3,7 +3,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/wrappers/ThemeProvider";
 import { Poppins } from "next/font/google";
 import { SessionProvider } from "next-auth/react";
-import NavbarWrapper from "@/components/wrappers/NavbarWrapper";
+import Navbar from "@/components/layout/Navbar";
 
 export const metadata: Metadata = {
   title: "VitalsGPT",
@@ -38,7 +38,7 @@ export default function RootLayout({
       >
         <SessionProvider>
           <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
-            <NavbarWrapper />
+            <Navbar />
             <main>{children}</main>
           </ThemeProvider>
         </SessionProvider>
