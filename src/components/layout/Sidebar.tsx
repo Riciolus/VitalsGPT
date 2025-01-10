@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "../ui/button";
 import Input from "../ui/input";
 import { cn } from "@/lib/utils";
 import ThemeButton from "../features/theme/ThemeButton";
+import { signIn } from "next-auth/react";
 
 const ToggleSidebarButton = ({ onClick }: { onClick: () => void }) => {
   return (
@@ -27,6 +28,10 @@ const ToggleSidebarButton = ({ onClick }: { onClick: () => void }) => {
 
 const Sidebar = () => {
   const [toggleSidebar, setToggleSidebar] = useState(false);
+
+  useEffect(() => {
+    setToggleSidebar(window.innerWidth > 762);
+  }, []);
 
   return (
     <>
@@ -93,7 +98,10 @@ const Sidebar = () => {
           <div className={cn("flex flex-col h-full", !toggleSidebar && "hidden")}>
             <div className="h-full">
               <div className="mt-8 flex flex-col gap-2 justify-center items-center">
-                <Button className="flex justify-center items-center gap-1 outline-none rounded-md border bg-lime-600 dark:bg-lime-800 bg-opacity-25 dark:bg-opacity-55 p-1.5 text-xs transition-all duration-[50ms]">
+                <Button
+                  onClick={() => signIn()}
+                  className="flex justify-center items-center gap-1 outline-none rounded-md border bg-lime-600 dark:bg-lime-800 bg-opacity-25 dark:bg-opacity-55 p-1.5 text-xs transition-all duration-[50ms]"
+                >
                   <svg
                     className="w-3 h-3 fill-neutral-600 dark:fill-foreground"
                     height="28px"

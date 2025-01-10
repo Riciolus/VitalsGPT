@@ -14,7 +14,7 @@ export function ThemeProvider({
   }, []);
 
   if (!mounted) {
-    return <>{children}</>; // Render children without ThemeProvider during SSR
+    return <></>; // Render children without ThemeProvider during SSR
   }
 
   return <NextThemesProvider {...props}>{children}</NextThemesProvider>;

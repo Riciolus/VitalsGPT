@@ -2,7 +2,6 @@
 
 import Card from "@/components/ui/card";
 import Input from "@/components/ui/input";
-import { signIn, useSession } from "next-auth/react";
 import { useState } from "react";
 
 const categories = [
@@ -83,9 +82,6 @@ const categories = [
 export default function VitalsMenu() {
   const [userMessage, setUserMessage] = useState<string>("");
 
-  const session = useSession();
-  console.log(session);
-
   const handleStartSession = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -94,7 +90,6 @@ export default function VitalsMenu() {
 
   return (
     <>
-      <button onClick={() => signIn()}>Login</button>
       <div className="w-full  flex flex-col justify-center items-center   h-full ">
         {/* whole no session interface */}
         <div className="flex flex-col justify-center items-center gap-3   w-full h-full">
