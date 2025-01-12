@@ -79,11 +79,14 @@ const categories = [
   },
 ];
 
+const createSession = () => {};
+
 export default function VitalsMenu() {
   const [userMessage, setUserMessage] = useState<string>("");
 
   const handleStartSession = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const sessionId = await createSession();
 
     if (!userMessage.trim()) return;
   };

@@ -120,8 +120,8 @@ const Sidebar = () => {
                       />
                     </g>
                   </svg>
-                  <span className="text-neutral-600 dark:text-foreground ">
-                    Sign in to access session
+                  <span onClick={() => signIn()} className="text-neutral-600 dark:text-foreground ">
+                    Sign in to access history
                   </span>
                 </Button>
               </div>
