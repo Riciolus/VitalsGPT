@@ -3,6 +3,7 @@
 import Card from "@/components/ui/card";
 import Input from "@/components/ui/input";
 import { cn } from "@/lib/utils";
+import { useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
 type message = {
@@ -10,10 +11,41 @@ type message = {
   text: string;
 };
 
+const handleEventSource = (
+  message: string,
+  setMessages: React.Dispatch<React.SetStateAction<message[]>>, // Adjust type as needed
+  setAssistantMessageBuffer: React.Dispatch<React.SetStateAction<string>>
+) => {
+  const url = `${process.env.NEXT_PUBLIC_VITALS_API_URL}?message=${encodeURIComponent(message)}`;
+  const eventSource = new EventSource(url);
+  let buffer = "";
+
+  eventSource.onmessage = (event) => {
+    buffer += event.data;
+    setAssistantMessageBuffer(buffer); // Buffer for live updates
+  };
+
+  eventSource.onerror = () => {
+    setMessages((prev) => [...prev, { role: "assistant", text: buffer }]); // Finalize message
+    setAssistantMessageBuffer(""); // Clear buffer
+    eventSource.close(); // Close the connection
+  };
+};
+
 export default function ChatInterface() {
   const [messages, setMessages] = useState<message[]>([]);
   const [userMessage, setUserMessage] = useState("");
   const [assistantMessageBuffer, setAssistantMessageBuffer] = useState("");
+  const searchParams = useSearchParams();
+  const guestFirstMessage = searchParams.get("message");
+
+  useEffect(() => {
+    if (guestFirstMessage) {
+      setMessages([{ role: "user", text: guestFirstMessage as string }]);
+
+      handleEventSource(guestFirstMessage, setMessages, setAssistantMessageBuffer);
+    }
+  }, [guestFirstMessage]);
 
   const chatContainerRef = useRef<HTMLDivElement | null>(null);
 
@@ -36,22 +68,7 @@ export default function ChatInterface() {
     // append the user message
     setMessages((prev) => [...prev, { role: "user", text: userMessage }]);
 
-    const url = `${process.env.NEXT_PUBLIC_VITALS_API_URL}?message=${encodeURIComponent(
-      userMessage
-    )}`;
-    const eventSource = new EventSource(url);
-    let buffer = "";
-
-    eventSource.onmessage = (event) => {
-      buffer += event.data;
-      setAssistantMessageBuffer(buffer);
-    };
-
-    eventSource.onerror = () => {
-      setMessages((prev) => [...prev, { role: "assistant", text: buffer }]);
-      setAssistantMessageBuffer(() => "");
-      eventSource.close();
-    };
+    handleEventSource(userMessage, setMessages, setAssistantMessageBuffer);
   };
 
   return (

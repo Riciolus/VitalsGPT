@@ -30,6 +30,7 @@ const Sidebar = () => {
   const [toggleSidebar, setToggleSidebar] = useState(false);
 
   useEffect(() => {
+    console.log("render");
     setToggleSidebar(window.innerWidth > 762);
   }, []);
 

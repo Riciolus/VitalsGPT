@@ -2,6 +2,8 @@
 
 import Card from "@/components/ui/card";
 import Input from "@/components/ui/input";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 const categories = [
@@ -79,14 +81,28 @@ const categories = [
   },
 ];
 
-const createSession = () => {};
+// const createSession = async () => {
+//   const response = await fetch("api/session", { method: "POST" });
+//   const data = await response.json();
+
+//   console.log(data);
+//   return data;
+// };
 
 export default function VitalsMenu() {
   const [userMessage, setUserMessage] = useState<string>("");
+  const { status } = useSession();
+  const router = useRouter();
 
   const handleStartSession = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const sessionId = await createSession();
+
+    if (status === "authenticated") {
+      // handle chat/sessionId
+      // const sessionId = await createSession();
+    } else {
+      router.push(`/chat/guest?message=${encodeURIComponent(userMessage)}`);
+    }
 
     if (!userMessage.trim()) return;
   };
