@@ -5,7 +5,7 @@ import { useTheme } from "next-themes";
 import Image from "next/image";
 
 export default function Avatar() {
-  const { status } = useSession();
+  const { status, data } = useSession();
   const { theme } = useTheme();
 
   const handleLoginIfUnauthenticated = () => {
@@ -22,7 +22,7 @@ export default function Avatar() {
         <Image
           src={
             status === "authenticated"
-              ? "/ava/dummyAva.jpg"
+              ? `/avatar/${data.user.image}`
               : theme === "light"
               ? "/avatar/default-avatar.svg"
               : "/avatar/default-avatar-dark.svg"

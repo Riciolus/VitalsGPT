@@ -8,24 +8,45 @@ import Input from "@/components/ui/input";
 import Button from "@/components/ui/button";
 import { useTheme } from "next-themes";
 import { cn } from "@/lib/utils";
+import { signIn } from "next-auth/react";
+import { useState } from "react";
 
 /* props: {
   searchParams: { callbackUrl: string | undefined };
 } */
 
 export default function SignInPage() {
-  // temporary
+  const [errorMessage, setErrorMessage] = useState("");
   const { theme } = useTheme();
 
-  // const handleSignIn = () => {
-  //   signIn("credentials");
-  // };
+  const handleSignIn = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const formData = new FormData(e.currentTarget);
+
+    const res = await signIn("credentials", {
+      emailOrUsername: formData.get("emailOrUsername"),
+      password: formData.get("password"),
+      redirect: false,
+    });
+
+    if (res?.error) {
+      console.error("Error signing in:", res.error);
+      if (res.error === "CredentialsSignin") {
+        setErrorMessage("Invalid email or password");
+      } else {
+        setErrorMessage("Oops.. something went wrong");
+      }
+    } else if (res?.ok) {
+      window.location.href = "/";
+    }
+  };
 
   return (
     <div className="h-[calc(100vh-4rem)] flex justify-center items-center">
       {/* form */}
       <div className="border border-neutral-400 shadow-inherit dark:border-neutral-600 w-80 py-8 mx-7 px-6  rounded-lg">
-        <form action="">
+        <form onSubmit={handleSignIn}>
           <div>
             <h1 className="text-center font-semibold text-2xl">Welcome :3</h1>
 
@@ -37,15 +58,22 @@ export default function SignInPage() {
                   <span className="text-sm text-neutral-700 dark:text-neutral-400 text-ne">/</span>{" "}
                   Username
                 </label>
-                <Input id="email/username" placeholder="Kai Cenat" />
+                <Input
+                  id="email/username"
+                  name="emailOrUsername"
+                  placeholder="Kai Cenat"
+                  required
+                />
               </div>
               <div className="grid gap-1">
                 <label htmlFor="password" className="text-sm">
                   Password
                 </label>
-                <Input id="password" type="password" placeholder="*****" />
+                <Input id="password" name="password" type="password" placeholder="*****" required />
               </div>
+              {errorMessage && <span className="text-red-500 text-sm">{errorMessage}</span>}
             </div>
+
             <div className="w-full flex flex-col justify-center  gap-3">
               <div>
                 <Button

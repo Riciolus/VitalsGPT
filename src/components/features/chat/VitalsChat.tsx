@@ -34,8 +34,8 @@ const handleEventSource = (
 
 export default function ChatInterface() {
   const [messages, setMessages] = useState<message[]>([]);
-  const [userMessage, setUserMessage] = useState("");
-  const [assistantMessageBuffer, setAssistantMessageBuffer] = useState("");
+  const [userMessage, setUserMessage] = useState<string>("");
+  const [assistantMessageBuffer, setAssistantMessageBuffer] = useState<string>("");
   const searchParams = useSearchParams();
   const guestFirstMessage = searchParams.get("message");
 
@@ -61,6 +61,7 @@ export default function ChatInterface() {
 
   const handleVitalsChat = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     setUserMessage("");
 
     if (!userMessage.trim()) return;

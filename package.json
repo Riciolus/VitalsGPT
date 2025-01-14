@@ -11,6 +11,7 @@
   "dependencies": {
     "@huggingface/inference": "^2.8.1",
     "@neondatabase/serverless": "^0.10.4",
+    "bcryptjs": "^2.4.3",
     "clsx": "^2.1.1",
     "dotenv": "^16.4.7",
     "drizzle-orm": "^0.38.3",
@@ -22,6 +23,7 @@
     "tailwind-merge": "^2.5.5"
   },
   "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",

@@ -114,7 +114,9 @@ export default function VitalsMenu() {
         <div className="flex flex-col justify-center items-center gap-3   w-full h-full">
           {/* welcome greets */}
           <div className="flex flex-col items-center gap-1 ">
-            <h3 className="font-semibold tracking-wide text-xl">How can I assist you today?</h3>
+            <h3 className="font-semibold tracking-wide text-xl text-neutral-600 dark:text-neutral-200">
+              How can I assist you today?
+            </h3>
 
             <div className="flex gap-3">
               {categories.map((category) => {
@@ -138,7 +140,7 @@ export default function VitalsMenu() {
                 id="vitalsInput"
                 onChange={(e) => setUserMessage(e.target.value)}
                 placeholder="Should I take a multivitamin?"
-                className="w-[18.5rem] md:w-96 h-12"
+                className="w-[18.5rem] md:w-96 h-12 text-neutral-600 dark:text-neutral-200"
               />
             </form>
           </div>

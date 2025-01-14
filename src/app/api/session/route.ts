@@ -8,7 +8,6 @@ const db = drizzle(process.env.DATABASE_URL!);
 export async function POST(req: NextRequest) {
   const body = await req.json();
 
-  console.log(body);
   const { userId } = body;
 
   if (!userId) {

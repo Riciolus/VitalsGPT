@@ -6,6 +6,8 @@ type InputProps = {
   type?: string;
   placeholder?: string;
   value?: string | number;
+  name?: string;
+  required?: boolean;
   onChange?: React.ChangeEventHandler<HTMLInputElement>;
   onFocus?: React.ChangeEventHandler<HTMLInputElement>;
   onBlur?: React.ChangeEventHandler<HTMLInputElement>;
@@ -14,7 +16,9 @@ type InputProps = {
 const Input = ({
   id,
   value,
+  name,
   type = "text",
+  required = false,
   onChange,
   onFocus,
   onBlur,
@@ -29,7 +33,9 @@ const Input = ({
         onFocus={onFocus}
         onBlur={onBlur}
         value={value}
+        name={name}
         type={type}
+        required={required}
         autoComplete="off"
         inputMode="text"
         className={cn(
