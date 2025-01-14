@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { ThemeProvider } from "@/components/wrappers/ThemeProvider";
 import { Poppins } from "next/font/google";
-import { SessionProvider } from "next-auth/react";
 import Navbar from "@/components/layout/Navbar";
+import { SessionProvider } from "next-auth/react";
 
 export const metadata: Metadata = {
   title: "VitalsGPT",
@@ -20,7 +20,7 @@ const poppins = Poppins({
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
 });
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
@@ -37,14 +37,12 @@ export default function RootLayout({
         className={`${poppins.className} bg-background text-foreground  overflow-hidden  antialiased   h-screen max-h-screen`}
       >
         <SessionProvider>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="light"
-            enableSystem={true}
-            disableTransitionOnChange
-          >
+          <ThemeProvider attribute="class" defaultTheme="light" disableTransitionOnChange>
             <Navbar />
+            {/* <div className="flex h-[calc(100vh-4rem)]"> */}
+            {/* <Sidebar /> */}
             <main>{children}</main>
+            {/* </div> */}
           </ThemeProvider>
         </SessionProvider>
       </body>

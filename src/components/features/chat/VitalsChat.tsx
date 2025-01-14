@@ -3,7 +3,6 @@
 import Card from "@/components/ui/card";
 import Input from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-import { useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
 type message = {
@@ -36,16 +35,15 @@ export default function ChatInterface() {
   const [messages, setMessages] = useState<message[]>([]);
   const [userMessage, setUserMessage] = useState<string>("");
   const [assistantMessageBuffer, setAssistantMessageBuffer] = useState<string>("");
-  const searchParams = useSearchParams();
-  const guestFirstMessage = searchParams.get("message");
 
   useEffect(() => {
-    if (guestFirstMessage) {
-      setMessages([{ role: "user", text: guestFirstMessage as string }]);
+    const initialMessage = sessionStorage.getItem("InitMsg");
+    if (initialMessage) {
+      setMessages((prev) => [...prev, { role: "user", text: initialMessage }]);
 
-      handleEventSource(guestFirstMessage, setMessages, setAssistantMessageBuffer);
+      handleEventSource(initialMessage, setMessages, setAssistantMessageBuffer);
     }
-  }, [guestFirstMessage]);
+  }, []);
 
   const chatContainerRef = useRef<HTMLDivElement | null>(null);
 

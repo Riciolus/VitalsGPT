@@ -4,6 +4,7 @@ import Image from "next/image";
 import Avatar from "../features/profile/Avatar";
 import Link from "next/link";
 import ThemeButton from "../features/theme/ThemeButton";
+import { signOut } from "next-auth/react";
 
 const Navbar = () => {
   return (
@@ -38,11 +39,15 @@ const Navbar = () => {
             </svg>
             <span className="text-sm font-medium group-hover:text-yellow-600">Docs</span>
           </a>
-
           <div>
             <hr className="h-5 w-0.5 border-none bg-gray-200 dark:bg-neutral-700/30" />
           </div>
         </div>
+
+        {/* Temporary for development */}
+        <span onClick={() => signOut()} className="text-sm font-medium group-hover:text-yellow-600">
+          Temporary Logout
+        </span>
 
         <div className="flex justify-center items-center">
           {/* toggle theme button */}

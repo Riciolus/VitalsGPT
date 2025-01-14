@@ -1,12 +1,13 @@
 import { relations } from "drizzle-orm";
-import { integer, json, pgTable, timestamp, uuid } from "drizzle-orm/pg-core";
+import { json, pgTable, timestamp, uuid } from "drizzle-orm/pg-core";
 import { usersTable } from "./users";
 
 export const sessionsTable = pgTable("sessions", {
   id: uuid("id").primaryKey(), // Session ID as the primary key
-  userId: integer("user_id")
+  userId: uuid("user_id")
     .notNull()
-    .references(() => usersTable.id), // Foreign key referencing users.id
+    .references(() => usersTable.id),
+  // Foreign key referencing users.id
   messages: json("messages").notNull(), // JSON field for storing messages
   createdAt: timestamp("created_at").defaultNow(), // Created at timestamp
   updatedAt: timestamp("updated_at").defaultNow(), // Updated at timestamp

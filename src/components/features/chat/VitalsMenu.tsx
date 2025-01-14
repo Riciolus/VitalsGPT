@@ -81,35 +81,48 @@ const categories = [
   },
 ];
 
-// const createSession = async () => {
-//   const response = await fetch("api/session", { method: "POST" });
-//   const data = await response.json();
+const createSession = async (userId: string) => {
+  const response = await fetch("api/session", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json", // Ensure the content type is JSON
+    },
+    body: JSON.stringify({ userId }), // Convert the object to a JSON string
+  });
+  const data = await response.json();
 
-//   console.log(data);
-//   return data;
-// };
+  return data;
+};
 
 export default function VitalsMenu() {
   const [userMessage, setUserMessage] = useState<string>("");
-  const { status } = useSession();
+  const { status, data } = useSession();
   const router = useRouter();
 
   const handleStartSession = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    if (!userMessage.trim()) return;
+
     if (status === "authenticated") {
       // handle chat/sessionId
-      // const sessionId = await createSession();
+      await createSession(data.user.id).then((res) => {
+        if (res.status) {
+          sessionStorage.setItem("InitMsg", userMessage);
+          router.push(`/chat/${res.chatSessionId}`);
+        } else {
+          console.error("Failed creating chat session");
+        }
+      });
     } else {
-      router.push(`/chat/guest?message=${encodeURIComponent(userMessage)}`);
+      sessionStorage.setItem("InitMsg", userMessage);
+      router.push("/chat/guest");
     }
-
-    if (!userMessage.trim()) return;
   };
 
   return (
     <>
-      <div className="w-full  flex flex-col justify-center items-center   h-full ">
+      <div className="w-full  flex flex-col justify-center items-center h-full ">
         {/* whole no session interface */}
         <div className="flex flex-col justify-center items-center gap-3   w-full h-full">
           {/* welcome greets */}
