@@ -1,11 +1,53 @@
 import { NextRequest } from "next/server";
 import { HfInference } from "@huggingface/inference";
+import { drizzle } from "drizzle-orm/neon-http";
+import { sessionsTable } from "@/db/schema/session";
+import { eq } from "drizzle-orm";
 
 export const dynamic = "force-dynamic"; // Prevents caching on Vercel
+
+const db = drizzle(process.env.DATABASE_URL!);
+
+async function saveToDatabase(message: string, assistantMessage: string, sessionId: string) {
+  if (!sessionId) {
+    return;
+  }
+
+  try {
+    const session = await db
+      .select()
+      .from(sessionsTable)
+      .where(eq(sessionsTable.id, sessionId))
+      .limit(1); // Assuming sessionId is unique
+
+    if (session.length > 0) {
+      const existingMessages = Array.isArray(session[0].messages) ? session[0].messages : [];
+
+      // Step 2: Append new messages
+      const updatedMessages = [
+        ...existingMessages,
+        { role: "user", text: message },
+        { role: "assistant", text: assistantMessage },
+      ];
+
+      // Step 3: Update the database with new messages
+      await db
+        .update(sessionsTable)
+        .set({ messages: updatedMessages })
+        .where(eq(sessionsTable.id, sessionId));
+    } else {
+      throw Error;
+    }
+  } catch (error) {
+    console.error("Database save error:", error);
+    throw new Error("Failed to save messages to the database");
+  }
+}
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const message = searchParams.get("message");
+  const sessionId = searchParams.get("sessionId");
 
   // Validate input message
   if (!message) {
@@ -21,6 +63,7 @@ export async function GET(req: NextRequest) {
   // Create a readable stream
   const stream = new ReadableStream({
     async start(controller) {
+      let assistantMessage = "";
       try {
         // Function to send data to the stream
         const sendEvent = (data: string) => {
@@ -30,11 +73,11 @@ export async function GET(req: NextRequest) {
 
         // Initialize chat completion stream
         const generator = client.chatCompletionStream({
-          model: "HuggingFaceH4/zephyr-7b-beta",
+          model: "HuggingFaceH4/zephyr-7b-alpha",
           messages: [
             {
               role: "system",
-              content: "You are a knowledgeable and polite medical assistant.",
+              content: "You are a knowledgeable medical assistant.",
             },
             {
               role: "user",
@@ -48,9 +91,15 @@ export async function GET(req: NextRequest) {
         for await (const chunk of generator) {
           if (chunk.choices && chunk.choices.length > 0) {
             const newContent = chunk.choices[0].delta?.content;
-            if (newContent) sendEvent(newContent);
+            if (newContent) {
+              assistantMessage += newContent;
+              sendEvent(newContent);
+            }
           }
         }
+
+        // Save to database after streaming completes
+        await saveToDatabase(message, assistantMessage, sessionId as string);
 
         // Close the stream
         controller.close();

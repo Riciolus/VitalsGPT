@@ -3,6 +3,8 @@
 import Card from "@/components/ui/card";
 import Input from "@/components/ui/input";
 import { cn } from "@/lib/utils";
+import { useSession } from "next-auth/react";
+import { useParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
 type message = {
@@ -13,9 +15,12 @@ type message = {
 const handleEventSource = (
   message: string,
   setMessages: React.Dispatch<React.SetStateAction<message[]>>, // Adjust type as needed
-  setAssistantMessageBuffer: React.Dispatch<React.SetStateAction<string>>
+  setAssistantMessageBuffer: React.Dispatch<React.SetStateAction<string>>,
+  sessionId: string
 ) => {
-  const url = `${process.env.NEXT_PUBLIC_VITALS_API_URL}?message=${encodeURIComponent(message)}`;
+  const url = `${process.env.NEXT_PUBLIC_VITALS_API_URL}?message=${encodeURIComponent(
+    message
+  )}&sessionId=${sessionId}`;
   const eventSource = new EventSource(url);
   let buffer = "";
 
@@ -31,22 +36,54 @@ const handleEventSource = (
   };
 };
 
+const getChatSession = async (sessionId: string) => {
+  const response = await fetch(`/api/session/${sessionId}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json", // Ensure the content type is JSON
+    },
+  });
+  const data = await response.json();
+
+  return data.messages;
+};
+
 export default function ChatInterface() {
   const [messages, setMessages] = useState<message[]>([]);
   const [userMessage, setUserMessage] = useState<string>("");
   const [assistantMessageBuffer, setAssistantMessageBuffer] = useState<string>("");
+  const { status } = useSession();
 
-  useEffect(() => {
-    const initialMessage = sessionStorage.getItem("InitMsg");
-    if (initialMessage) {
-      setMessages((prev) => [...prev, { role: "user", text: initialMessage }]);
-
-      handleEventSource(initialMessage, setMessages, setAssistantMessageBuffer);
-    }
-  }, []);
+  // sessionId
+  const { id } = useParams<{ id: string }>();
 
   const chatContainerRef = useRef<HTMLDivElement | null>(null);
 
+  useEffect(() => {
+    const initialMessage = sessionStorage.getItem("InitMsg");
+    // handle user first message from VitalsMenu.tsx
+    if (initialMessage) {
+      setMessages((prev) => [...prev, { role: "user", text: initialMessage }]);
+
+      sessionStorage.setItem("InitMsg", "");
+
+      handleEventSource(initialMessage, setMessages, setAssistantMessageBuffer, id);
+    }
+    // handle user access session from sidebar.
+    else {
+      if (status === "authenticated") {
+        getChatSession(id)
+          .then((messagesFromDb) => {
+            setMessages((prev) => [...prev, ...messagesFromDb]);
+          })
+          .catch((error) => {
+            console.error("Error fetching chat session:", error);
+          });
+      }
+    }
+  }, [id, status]);
+
+  // scroll into view
   useEffect(() => {
     if (chatContainerRef.current) {
       chatContainerRef.current.scrollIntoView({
@@ -67,7 +104,7 @@ export default function ChatInterface() {
     // append the user message
     setMessages((prev) => [...prev, { role: "user", text: userMessage }]);
 
-    handleEventSource(userMessage, setMessages, setAssistantMessageBuffer);
+    handleEventSource(userMessage, setMessages, setAssistantMessageBuffer, id);
   };
 
   return (
