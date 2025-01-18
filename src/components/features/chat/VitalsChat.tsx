@@ -17,23 +17,43 @@ const handleEventSource = (
   setMessages: React.Dispatch<React.SetStateAction<message[]>>, // Adjust type as needed
   setAssistantMessageBuffer: React.Dispatch<React.SetStateAction<string>>,
   sessionId: string
-) => {
-  const url = `${process.env.NEXT_PUBLIC_VITALS_API_URL}?message=${encodeURIComponent(
-    message
-  )}&sessionId=${sessionId}`;
-  const eventSource = new EventSource(url);
-  let buffer = "";
+): Promise<string> => {
+  return new Promise((resolve) => {
+    const url = `${process.env.NEXT_PUBLIC_VITALS_API_URL}?message=${encodeURIComponent(
+      message
+    )}&sessionId=${sessionId}`;
+    const eventSource = new EventSource(url);
+    let buffer = "";
 
-  eventSource.onmessage = (event) => {
-    buffer += event.data;
-    setAssistantMessageBuffer(buffer); // Buffer for live updates
-  };
+    eventSource.onmessage = (event) => {
+      buffer += event.data;
+      setAssistantMessageBuffer(buffer); // Buffer for live updates
+    };
 
-  eventSource.onerror = () => {
-    setMessages((prev) => [...prev, { role: "assistant", text: buffer }]); // Finalize message
-    setAssistantMessageBuffer(""); // Clear buffer
-    eventSource.close(); // Close the connection
-  };
+    eventSource.onerror = () => {
+      setMessages((prev) => {
+        return [...prev, { role: "assistant", text: buffer }];
+      }); // Finalize message
+      setAssistantMessageBuffer(""); // Clear buffer
+      eventSource.close(); // Close the connection
+
+      resolve(buffer); // Resolve with the final message buffer
+    };
+  });
+};
+
+const generateTitle = async (initialAssistantResponse: string, sessionId: string) => {
+  const response = await fetch("/api/chat/title", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json", // Ensure the content type is JSON
+    },
+    body: JSON.stringify({ initialAssistantResponse, sessionId }),
+  });
+
+  const data = await response.json();
+
+  return data;
 };
 
 const getChatSession = async (sessionId: string) => {
@@ -67,7 +87,25 @@ export default function ChatInterface() {
 
       sessionStorage.setItem("InitMsg", "");
 
-      handleEventSource(initialMessage, setMessages, setAssistantMessageBuffer, id);
+      const handleInitialMessage = async () => {
+        try {
+          const initialAssistantResponse = await handleEventSource(
+            initialMessage,
+            setMessages,
+            setAssistantMessageBuffer,
+            id
+          );
+
+          // generate a title if user is in authenticated.
+          if (status === "authenticated") {
+            generateTitle(initialAssistantResponse, id);
+          }
+        } catch (error) {
+          console.error("Error handling EventSource:", error);
+        }
+      };
+
+      handleInitialMessage(); // Call async function
     }
     // handle user access session from sidebar.
     else {
@@ -113,7 +151,6 @@ export default function ChatInterface() {
         {/* whole session interface */}
 
         {/* chat area */}
-        {/* current height */}
         <div className="overflow-y-auto h-[calc(100vh-9.5rem)]">
           {/* the height is just temporary */}
           <div

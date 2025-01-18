@@ -1,11 +1,11 @@
-import { NextRequest, NextResponse } from "next/server";
-import { getToken } from "next-auth/jwt";
+import { NextResponse } from "next/server";
+// import { getToken } from "next-auth/jwt";
 
-const secret = process.env.AUTH_SECRET;
+// const secret = process.env.AUTH_SECRET;
 
-export async function middleware(req: NextRequest) {
-  const token = await getToken({ req, secret });
-  console.log(token);
+export async function middleware() {
+  // const token = await getToken({ req, secret });
+  // // console.log(token);
   // if (!token) {
   //   return NextResponse.json(
   //     { message: "Unauthorized: Token not found or invalid" },
@@ -27,5 +27,5 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: "/api/session", // Apply middleware to all API routes
+  matcher: ["/api/session/:path*", "/api/chat/:path*"], // Apply middleware to all API routes
 };

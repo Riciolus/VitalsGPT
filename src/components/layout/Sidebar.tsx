@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import Button from "../ui/button";
 import Input from "../ui/input";
 import { cn } from "@/lib/utils";
@@ -27,7 +27,7 @@ const ToggleSidebarButton = ({ onClick }: { onClick: () => void }) => {
   );
 };
 
-const Sidebar = () => {
+const Sidebar = memo(() => {
   const [toggleSidebar, setToggleSidebar] = useState(false);
 
   useEffect(() => {
@@ -110,6 +110,8 @@ const Sidebar = () => {
       </div>
     </>
   );
-};
+});
+
+Sidebar.displayName = "Sidebar";
 
 export default Sidebar;

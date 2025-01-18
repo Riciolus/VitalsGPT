@@ -6,7 +6,13 @@ import SignInMessage from "../features/sessionHistory/SignInMessage";
 const SessionHistoryWrapper = () => {
   const { status } = useSession();
 
-  return <>{status === "authenticated" ? <SessionHistory /> : <SignInMessage />}</>;
+  if (status === "authenticated") {
+    return <SessionHistory />;
+  } else if (status === "loading") {
+    return <></>;
+  } else {
+    return <SignInMessage />;
+  }
 };
 
 export default SessionHistoryWrapper;

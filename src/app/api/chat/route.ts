@@ -2,14 +2,14 @@ import { NextRequest } from "next/server";
 import { HfInference } from "@huggingface/inference";
 import { drizzle } from "drizzle-orm/neon-http";
 import { sessionsTable } from "@/db/schema/session";
-import { eq } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 
 export const dynamic = "force-dynamic"; // Prevents caching on Vercel
 
 const db = drizzle(process.env.DATABASE_URL!);
 
 async function saveToDatabase(message: string, assistantMessage: string, sessionId: string) {
-  if (!sessionId) {
+  if (!sessionId || sessionId === "guest") {
     return;
   }
 
@@ -18,7 +18,7 @@ async function saveToDatabase(message: string, assistantMessage: string, session
       .select()
       .from(sessionsTable)
       .where(eq(sessionsTable.id, sessionId))
-      .limit(1); // Assuming sessionId is unique
+      .limit(1);
 
     if (session.length > 0) {
       const existingMessages = Array.isArray(session[0].messages) ? session[0].messages : [];
@@ -33,7 +33,7 @@ async function saveToDatabase(message: string, assistantMessage: string, session
       // Step 3: Update the database with new messages
       await db
         .update(sessionsTable)
-        .set({ messages: updatedMessages })
+        .set({ messages: updatedMessages, updatedAt: sql`NOW()` })
         .where(eq(sessionsTable.id, sessionId));
     } else {
       throw Error;
@@ -77,7 +77,7 @@ export async function GET(req: NextRequest) {
           messages: [
             {
               role: "system",
-              content: "You are a knowledgeable medical assistant.",
+              content: "You are a humble and knowledgeable medical assistant.",
             },
             {
               role: "user",
