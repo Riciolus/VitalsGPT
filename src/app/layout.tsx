@@ -11,8 +11,6 @@ export const metadata: Metadata = {
     "VitalsGPT is an intelligent assistant for monitoring and analyzing health data, offering personalized insights and recommendations.",
 };
 
-// const inter = Inter({ subsets: ["latin"] });
-
 const poppins = Poppins({
   subsets: ["latin"],
   display: "swap",
@@ -37,12 +35,9 @@ export default async function RootLayout({
         className={`${poppins.className} bg-background text-foreground  overflow-hidden  antialiased   h-screen max-h-screen`}
       >
         <SessionProvider>
-          <ThemeProvider attribute="class" defaultTheme="light" disableTransitionOnChange>
+          <ThemeProvider attribute="class" defaultTheme="light">
             <Navbar />
-            {/* <div className="flex h-[calc(100vh-4rem)]"> */}
-            {/* <Sidebar /> */}
-            <main>{children}</main>
-            {/* </div> */}
+            <div className="w-full h-full">{children}</div>
           </ThemeProvider>
         </SessionProvider>
       </body>

@@ -29,14 +29,14 @@ const SessionHistory = () => {
   }, []);
 
   return (
-    <div className="h-full mt-5 mx-2 ">
-      <div className=" flex flex-col gap-4 text-sm font-medium text-neutral-600 dark:text-neutral-300 ">
+    <div className="h-full mt-5">
+      <div className=" flex flex-col gap-1 text-sm font-medium text-neutral-600 dark:text-neutral-300/80 ">
         {userMessageSession &&
           userMessageSession.map((message, index) => (
             <Link
               href={`/chat/${message.sessionId}`}
               key={index}
-              className="text-left line-clamp-2"
+              className="text-left line-clamp-2 hover:dark:bg-neutral-700/50 hover:bg-neutral-200/50 px-2 py-2 whitespace-pre-line text-ellipsis overflow-hidden ps-2 rounded-lg"
             >
               {message.title}
             </Link>

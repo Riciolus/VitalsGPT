@@ -26,7 +26,7 @@ export async function POST(req: NextRequest) {
       },
       body: JSON.stringify({
         key: process.env.TITLE_GENERATOR_API_KEY,
-        text: `generate a title max 10 words: ${initialAssistantResponse}`,
+        text: `generate a title max 10 words, if the text is about greeting just answer "Hello Assistance"  : ${initialAssistantResponse}`,
       }),
     });
 
