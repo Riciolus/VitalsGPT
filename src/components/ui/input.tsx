@@ -1,3 +1,4 @@
+import React, { forwardRef } from "react";
 import { cn } from "@/lib/utils";
 
 type InputProps = {
@@ -9,25 +10,30 @@ type InputProps = {
   name?: string;
   required?: boolean;
   onChange?: React.ChangeEventHandler<HTMLInputElement>;
-  onFocus?: React.ChangeEventHandler<HTMLInputElement>;
-  onBlur?: React.ChangeEventHandler<HTMLInputElement>;
+  onFocus?: React.FocusEventHandler<HTMLInputElement>;
+  onBlur?: React.FocusEventHandler<HTMLInputElement>;
 };
 
-const Input = ({
-  id,
-  value,
-  name,
-  type = "text",
-  required = false,
-  onChange,
-  onFocus,
-  onBlur,
-  className,
-  placeholder,
-}: InputProps) => {
-  return (
-    <>
+// Wrap the Input component with forwardRef
+const Input = forwardRef<HTMLInputElement, InputProps>(
+  (
+    {
+      id,
+      value,
+      name,
+      type = "text",
+      required = false,
+      onChange,
+      onFocus,
+      onBlur,
+      className,
+      placeholder,
+    }: InputProps,
+    ref
+  ) => {
+    return (
       <input
+        ref={ref} // Pass the ref to the input element
         id={id}
         onChange={onChange}
         onFocus={onFocus}
@@ -44,8 +50,10 @@ const Input = ({
         )}
         placeholder={placeholder}
       />
-    </>
-  );
-};
+    );
+  }
+);
+
+Input.displayName = "Input"; // Necessary for forwardRef components to display correctly in dev tools
 
 export default Input;

@@ -1,26 +1,26 @@
 "use client";
 
-// import { redirect } from "next/navigation";
-// {auth} too from the docs, idk what's that for
-// import { signIn } from "@/app/auth";
-// import { AuthError } from "next-auth";
 import Input from "@/components/ui/input";
 import Button from "@/components/ui/button";
-import { useTheme } from "next-themes";
-import { cn } from "@/lib/utils";
 import { signIn } from "next-auth/react";
-import { useState } from "react";
-
-/* props: {
-  searchParams: { callbackUrl: string | undefined };
-} */
+import { useEffect, useRef, useState } from "react";
 
 export default function SignInPage() {
   const [errorMessage, setErrorMessage] = useState("");
-  const { theme } = useTheme();
+  const [isLoading, setIsLoading] = useState(false);
+
+  const inputRef = useRef<HTMLInputElement>(null); // Specify the type explicitly
+
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.focus(); // No more TypeScript error
+    }
+  }, []);
 
   const handleSignIn = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    setIsLoading(true);
 
     const formData = new FormData(e.currentTarget);
 
@@ -35,11 +35,13 @@ export default function SignInPage() {
       if (res.error === "CredentialsSignin") {
         setErrorMessage("Invalid email or password");
       } else {
-        setErrorMessage("Oops.. something went wrong");
+        setErrorMessage("Oops :x.. something went wrong");
       }
     } else if (res?.ok) {
       window.location.href = "/";
     }
+
+    setIsLoading((prev) => !prev);
   };
 
   return (
@@ -59,6 +61,7 @@ export default function SignInPage() {
                   Username
                 </label>
                 <Input
+                  ref={inputRef}
                   id="email/username"
                   name="emailOrUsername"
                   placeholder="Kai Cenat"
@@ -77,9 +80,10 @@ export default function SignInPage() {
             <div className="w-full flex flex-col justify-center  gap-3">
               <div>
                 <Button
-                  className={cn("border w-full bg-lime-800", theme === "light" && "bg-lime-500")}
+                  disabled={isLoading}
+                  className="border w-full dark:bg-lime-800 dark:disabled:bg-lime-800/70 bg-lime-500 disabled:bg-lime-600 "
                 >
-                  Sign In
+                  {isLoading ? "Loading..." : "Sign In"}
                 </Button>
               </div>
               <div className="my-2 w-full flex flex-col gap-1.5">
