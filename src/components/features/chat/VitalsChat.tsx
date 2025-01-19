@@ -6,6 +6,7 @@ import { useSession } from "next-auth/react";
 import { useParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import Chatbox from "./chatbox";
+import useChatSession from "@/store/useChatSessionStore";
 
 type message = {
   role: "assistant" | "user";
@@ -42,7 +43,11 @@ const handleEventSource = (
   });
 };
 
-const generateTitle = async (initialAssistantResponse: string, sessionId: string) => {
+const generateTitle = async (
+  initialAssistantResponse: string,
+  sessionId: string,
+  renameUserChatSession: (sessionId: string, newTitle: string) => void
+) => {
   const response = await fetch("/api/chat/title", {
     method: "POST",
     headers: {
@@ -53,7 +58,7 @@ const generateTitle = async (initialAssistantResponse: string, sessionId: string
 
   const data = await response.json();
 
-  return data;
+  renameUserChatSession(sessionId, data.title);
 };
 
 const getChatSession = async (sessionId: string) => {
@@ -72,6 +77,8 @@ export default function ChatInterface() {
   const [messages, setMessages] = useState<message[]>([]);
   const [userMessage, setUserMessage] = useState<string>("");
   const [assistantMessageBuffer, setAssistantMessageBuffer] = useState<string>("");
+  const renameUserChatSession = useChatSession((state) => state.renameUserChatSession);
+
   const { status } = useSession();
 
   // sessionId
@@ -98,7 +105,7 @@ export default function ChatInterface() {
 
           // generate a title if user is in authenticated.
           if (status === "authenticated") {
-            generateTitle(initialAssistantResponse, id);
+            generateTitle(initialAssistantResponse, id, renameUserChatSession);
           }
         } catch (error) {
           console.error("Error handling EventSource:", error);
@@ -119,7 +126,7 @@ export default function ChatInterface() {
           });
       }
     }
-  }, [id, status]);
+  }, [id, status, renameUserChatSession]);
 
   // scroll into view
   useEffect(() => {

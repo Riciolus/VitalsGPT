@@ -5,6 +5,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Chatbox from "./chatbox";
+import useChatSession from "@/store/useChatSessionStore";
 
 const categories = [
   {
@@ -91,11 +92,15 @@ const createSession = async (userId: string) => {
   });
   const data = await response.json();
 
+  // console.log(data.data);
+  // console.log(data.data.userSessionId);
+
   return data;
 };
 
 export default function VitalsMenu() {
   const [userMessage, setUserMessage] = useState<string>("");
+  const setUserChatSession = useChatSession((state) => state.setUserChatSession);
   const { status, data } = useSession();
   const router = useRouter();
 
@@ -109,6 +114,12 @@ export default function VitalsMenu() {
       await createSession(data.user.id).then((res) => {
         if (res.status) {
           sessionStorage.setItem("InitMsg", userMessage);
+          setUserChatSession([
+            {
+              sessionId: res.chatSessionId,
+              title: "New Chat",
+            },
+          ]);
           router.push(`/chat/${res.chatSessionId}`);
         } else {
           console.error("Failed creating chat session");
@@ -130,7 +141,6 @@ export default function VitalsMenu() {
             <h3 className="font-semibold tracking-wide text-xl text-neutral-600 dark:text-neutral-200">
               How can I assist you today?
             </h3>
-
             <div className="flex gap-3">
               {categories.map((category) => {
                 return (
