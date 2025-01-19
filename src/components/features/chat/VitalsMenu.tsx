@@ -1,10 +1,10 @@
 "use client";
 
 import Card from "@/components/ui/card";
-import Input from "@/components/ui/input";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import Chatbox from "./chatbox";
 
 const categories = [
   {
@@ -149,11 +149,9 @@ export default function VitalsMenu() {
           <div>
             {/* input question */}
             <form onSubmit={(e) => handleStartSession(e)}>
-              <Input
-                id="vitalsInput"
-                onChange={(e) => setUserMessage(e.target.value)}
+              <Chatbox
                 placeholder="Should I take a multivitamin?"
-                className="w-[18.5rem] md:w-96 h-12 text-neutral-600 dark:text-neutral-200"
+                setUserMessage={setUserMessage}
               />
             </form>
           </div>

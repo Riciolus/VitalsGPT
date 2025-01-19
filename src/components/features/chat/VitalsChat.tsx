@@ -1,11 +1,11 @@
 "use client";
 
 import Card from "@/components/ui/card";
-import Input from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { useSession } from "next-auth/react";
 import { useParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import Chatbox from "./chatbox";
 
 type message = {
   role: "assistant" | "user";
@@ -197,13 +197,7 @@ export default function ChatInterface() {
         <div className="absolute bg-background  bottom-0 pb-6 pt-3 w-full flex justify-center text-neutral-500 dark:text-neutral-400 items-center">
           {/* input question */}
           <form onSubmit={(e) => handleVitalsChat(e)}>
-            <Input
-              id="vitalsInput"
-              onChange={(e) => setUserMessage(e.target.value)}
-              value={userMessage}
-              placeholder="I'd like to..."
-              className="w-[calc(100vw-5rem)] sm:w-[30rem] md:w-[26rem] h-12"
-            />
+            <Chatbox placeholder="Message VitalsGPT" setUserMessage={setUserMessage} />
           </form>
         </div>
       </div>
