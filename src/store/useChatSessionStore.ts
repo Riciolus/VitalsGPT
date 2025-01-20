@@ -9,10 +9,11 @@ interface CounterState {
 
 const useChatSession = create<CounterState>((set) => ({
   userChatSession: [],
+  // activeChatSession: "",
 
   setUserChatSession: (newSession) =>
     set((state) => ({
-      userChatSession: [...state.userChatSession, ...newSession],
+      userChatSession: [...newSession, ...state.userChatSession],
     })),
 
   renameUserChatSession: (sessionId, newTitle) =>

@@ -98,7 +98,7 @@ const Sidebar = memo(() => {
             </div>
 
             {/* sidebar content */}
-            <div className={cn("flex flex-col h-[88%]", !toggleSidebar && "hidden")}>
+            <div className={cn("flex flex-col h-[85%]", !toggleSidebar && "hidden")}>
               <SessionHistoryWrapper />
               {/* lower sidebar content*/}
             </div>

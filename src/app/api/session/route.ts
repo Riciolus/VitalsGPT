@@ -1,6 +1,6 @@
 import { sessionsTable } from "@/db/schema/session";
 import { randomUUID } from "crypto";
-import { eq } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/neon-http";
 import { getToken } from "next-auth/jwt";
 import { NextRequest, NextResponse } from "next/server";
@@ -34,9 +34,14 @@ export async function GET(req: NextRequest) {
   }
 
   const data = await db
-    .select({ sessionId: sessionsTable.id, title: sessionsTable.title })
+    .select({
+      sessionId: sessionsTable.id,
+      title: sessionsTable.title,
+      updatedAt: sessionsTable.updatedAt,
+    })
     .from(sessionsTable)
-    .where(eq(sessionsTable.userId, id as string));
+    .where(eq(sessionsTable.userId, id as string))
+    .orderBy(desc(sessionsTable.updatedAt));
 
   return NextResponse.json(data);
 }
