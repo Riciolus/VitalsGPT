@@ -30,6 +30,10 @@ export default async function RootLayout({
           name="viewport"
           content="width=device-width, initial-scale=1, interactive-widget=resizes-content"
         />
+        {/* Favicon for most browsers */}
+        <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+        {/* Apple Touch Icon */}
+        <link rel="apple-touch-icon" href="/icon.svg" type="image/svg+xml" />
       </head>
       <body
         className={`${poppins.className} bg-background text-foreground  overflow-hidden  antialiased   h-screen max-h-screen`}

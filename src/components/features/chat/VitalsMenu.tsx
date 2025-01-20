@@ -86,14 +86,11 @@ const createSession = async (userId: string) => {
   const response = await fetch("api/session", {
     method: "POST",
     headers: {
-      "Content-Type": "application/json", // Ensure the content type is JSON
+      "Content-Type": "application/json",
     },
-    body: JSON.stringify({ userId }), // Convert the object to a JSON string
+    body: JSON.stringify({ userId }),
   });
   const data = await response.json();
-
-  // console.log(data.data);
-  // console.log(data.data.userSessionId);
 
   return data;
 };
@@ -118,6 +115,7 @@ export default function VitalsMenu() {
             {
               sessionId: res.chatSessionId,
               title: "New Chat",
+              updatedAt: new Date(),
             },
           ]);
           router.push(`/chat/${res.chatSessionId}`);

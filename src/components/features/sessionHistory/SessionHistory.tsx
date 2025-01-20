@@ -77,7 +77,7 @@ const SessionHistory = () => {
   const categories = categorizeSessions(userChatSession);
 
   return (
-    <div className="no-scrollbar h-full overflow-y-auto">
+    <div className="no-scrollbar h-full flex flex-col gap-6 overflow-y-auto">
       {categories.today.length !== 0 && (
         <Categories title="Today" chatSessions={categories.today} />
       )}
