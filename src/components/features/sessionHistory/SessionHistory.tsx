@@ -77,20 +77,22 @@ const SessionHistory = () => {
   const categories = categorizeSessions(userChatSession);
 
   return (
-    <div className="no-scrollbar h-full flex flex-col gap-6 overflow-y-auto">
-      {categories.today.length !== 0 && (
-        <Categories title="Today" chatSessions={categories.today} />
-      )}
+    <div className="scrollbar h-full  overflow-y-auto ">
+      <div className="px-3 flex flex-col gap-6">
+        {categories.today.length !== 0 && (
+          <Categories title="Today" chatSessions={categories.today} />
+        )}
 
-      {categories.yesterday.length !== 0 && (
-        <Categories title="Yesterday" chatSessions={categories.yesterday} />
-      )}
-      {categories.last7Days.length !== 0 && (
-        <Categories title="Previous 7 Days" chatSessions={categories.last7Days} />
-      )}
-      {categories.last30Days.length !== 0 && (
-        <Categories title="Previous 30 Days" chatSessions={categories.last30Days} />
-      )}
+        {categories.yesterday.length !== 0 && (
+          <Categories title="Yesterday" chatSessions={categories.yesterday} />
+        )}
+        {categories.last7Days.length !== 0 && (
+          <Categories title="Previous 7 Days" chatSessions={categories.last7Days} />
+        )}
+        {categories.last30Days.length !== 0 && (
+          <Categories title="Previous 30 Days" chatSessions={categories.last30Days} />
+        )}
+      </div>
     </div>
   );
 };

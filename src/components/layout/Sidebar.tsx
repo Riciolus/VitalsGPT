@@ -38,19 +38,19 @@ const Sidebar = memo(() => {
     <>
       <div
         className={cn(
-          "w-[295px] h-full max-h-[calc(100vh-4rem)] z-50  fixed  md:static  bg-background shrink-0 flex transition-all duration-[50ms] ease-in-out",
+          "w-[295px] h-full max-h-[calc(100vh-4rem)] z-50   fixed  md:static  bg-background shrink-0 flex transition-all duration-[50ms] ease-in-out",
           !toggleSidebar && " w-[40px] h-fit bg-transparent"
         )}
       >
         <div
           className={cn(
-            "p-3 border-r flex flex-col  border-neutral-200  w-fit dark:border-neutral-700",
+            " border-r flex flex-col   border-neutral-200  w-fit dark:border-neutral-700",
             !toggleSidebar && "border-none transition-all duration-[50ms]"
           )}
         >
-          <div className="h-full flex flex-col gap-5">
+          <div className="h-full flex flex-col gap-5 py-3">
             {/* upper content */}
-            <div className="flex items-center gap-3 justify-between w-full">
+            <div className="flex items-center gap-3 px-3 justify-between w-full">
               {/* toggle sidebar */}
               <ToggleSidebarButton onClick={() => setToggleSidebar((prev) => !prev)} />
 
@@ -104,7 +104,7 @@ const Sidebar = memo(() => {
             </div>
 
             {/* lower content */}
-            <div className={toggleSidebar ? "flex" : "hidden"}>
+            <div className={cn(toggleSidebar ? "flex" : "hidden", "px-3")}>
               {/* toggle theme button */}
               <div className="hidden md:flex">
                 <ThemeButton />

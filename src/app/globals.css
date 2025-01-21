@@ -6,11 +6,13 @@
 :root {
   --background: #fafafa;
   --foreground: #262626;
+  --scrollbar: #e5e5e5;
 }
 
 html.dark {
   --background: #262626;
   --foreground: #fafafa;
+  --scrollbar: #404040;
 }
 
 /* Apply global background and text color */
@@ -24,13 +26,41 @@ html {
 }
 
 @layer utilities {
-  /* Chrome, Safari and Opera */
+  /* For Firefox */
+  .scrollbar {
+    scrollbar-width: thin; /* Thin scrollbar */
+    scrollbar-color: var(--scrollbar) var(--background); /* Thumb color and track color */
+  }
+}
+
+/* 
+
+
+  Chrome, Safari and Opera
   .no-scrollbar::-webkit-scrollbar {
     display: none;
   }
 
   .no-scrollbar {
-    -ms-overflow-style: none; /* IE and Edge */
-    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: auto; IE and Edge 
+    scrollbar-width: none;  Firefox 
   }
-}
+
+  .chat-session-scrollbar::-webkit-scrollbar {
+    width: 5px; /* Width of the scrollbar
+  }
+
+  .chat-session-scrollbar::-webkit-scrollbar-thumb {
+    background: red; /* Scrollbar color
+    border-radius: 10px; /* Round edges
+  }
+
+  .chat-session-scrollbar::-webkit-scrollbar-track {
+    background: #031aec; /* Track color
+  }
+
+
+
+
+
+*/

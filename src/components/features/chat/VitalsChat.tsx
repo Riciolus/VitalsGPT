@@ -158,7 +158,7 @@ export default function ChatInterface() {
         {/* whole session interface */}
 
         {/* chat area */}
-        <div className="overflow-y-auto h-[calc(100vh-9.5rem)]">
+        <div className="scrollbar overflow-y-auto h-[calc(100vh-9.5rem)]">
           {/* the height is just temporary */}
           <div
             ref={chatContainerRef}

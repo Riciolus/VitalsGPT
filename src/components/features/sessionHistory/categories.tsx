@@ -13,7 +13,7 @@ const Categories = ({
   const { id } = useParams<{ id: string }>();
 
   return (
-    <div className="flex flex-col gap-1.5 text-sm font-medium  ">
+    <div className="flex flex-col gap-1.5 text-sm font-medium ">
       <span className="px-2 mb-2 border-neutral-600 ">{title}</span>
       {chatSessions &&
         chatSessions.map((session) => (
