@@ -1,8 +1,9 @@
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { UserChatSession } from "./SessionHistory";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import useChatSession from "@/store/useChatSessionStore";
 
 const SessionTitle = ({
   isActive,
@@ -12,10 +13,34 @@ const SessionTitle = ({
   chatSession: UserChatSession;
 }) => {
   const [isOption, setIsOption] = useState(false);
-  const [deleteVerify, setDeleteVerify] = useState(false);
+  const popUpRef = useRef<HTMLDivElement>(null);
+  const deleteChatSession = useChatSession((state) => state.deleteUserChatSession);
 
   // temporary idk if this true. only for dev speed
   const router = useRouter();
+
+  // Close pop-up when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        popUpRef.current &&
+        event.target instanceof Node &&
+        !popUpRef.current.contains(event.target)
+      ) {
+        setIsOption(false);
+      }
+    };
+
+    if (isOption) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isOption]);
 
   const handleDeleteChatSession = async () => {
     const response = await fetch(`/api/session/${chatSession.sessionId}`, {
@@ -28,6 +53,8 @@ const SessionTitle = ({
     const result = await response.json();
 
     if (result.status) {
+      deleteChatSession(chatSession.sessionId);
+
       router.push("/");
     } else {
       console.error(result.message);
@@ -73,21 +100,15 @@ const SessionTitle = ({
           </button>
 
           {isOption && (
-            <div className="absolute z-10 -right-3 grid  text-left  transition-all dark:bg-neutral-700 bg-neutral-100 py-1 px-1 rounded-xl border border-neutral-300 dark:border-neutral-500 shadow-xl">
+            <div
+              ref={popUpRef}
+              className="absolute z-10 -right-3 grid  text-left  transition-all dark:bg-neutral-700 bg-neutral-100 py-1 px-1 rounded-xl border border-neutral-300 dark:border-neutral-500 shadow-xl"
+            >
               <span
-                onClick={() => setDeleteVerify(true)}
-                className="text-red-500 dark:text-red-400 hover:dark:bg-neutral-600 hover:bg-neutral-200 py-1.5 px-2 rounded-lg grid gap-1"
+                onClick={handleDeleteChatSession}
+                className="text-red-500 dark:text-red-400 transition-colors hover:dark:bg-neutral-600 hover:bg-neutral-200 py-1.5 px-2 rounded-lg grid gap-1"
               >
-                <span>Delete</span>
-
-                <div
-                  onClick={handleDeleteChatSession}
-                  className={cn(
-                    "gap-1 hidden text-foreground items-center rounded-lg transition-all",
-                    deleteVerify && "flex"
-                  )}
-                >
-                  <span>Sure?</span>
+                <span className="flex gap-1">
                   <svg
                     width="18px"
                     height="18px"
@@ -131,7 +152,8 @@ const SessionTitle = ({
                       strokeLinejoin="round"
                     />
                   </svg>
-                </div>
+                  Delete
+                </span>
               </span>
             </div>
           )}

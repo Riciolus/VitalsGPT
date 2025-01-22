@@ -5,11 +5,11 @@ interface CounterState {
   userChatSession: UserChatSession[];
   setUserChatSession: (userChatSession: UserChatSession[]) => void;
   renameUserChatSession: (sessionId: string, newTitle: string) => void;
+  deleteUserChatSession: (sessionId: string) => void;
 }
 
 const useChatSession = create<CounterState>((set) => ({
   userChatSession: [],
-  // activeChatSession: "",
 
   setUserChatSession: (newSession) =>
     set((state) => ({
@@ -22,6 +22,12 @@ const useChatSession = create<CounterState>((set) => ({
         session.sessionId === sessionId ? { ...session, title: newTitle } : session
       ),
     })),
+
+  deleteUserChatSession: (sessionId) => {
+    set((state) => ({
+      userChatSession: state.userChatSession.filter((session) => session.sessionId !== sessionId),
+    }));
+  },
 }));
 
 export default useChatSession;
