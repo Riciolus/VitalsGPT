@@ -4,7 +4,7 @@ import Card from "@/components/ui/card";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import Chatbox from "./chatbox";
+import Chatbox from "./chatbox/chatbox";
 import useChatSession from "@/store/useChatSessionStore";
 
 const categories = [

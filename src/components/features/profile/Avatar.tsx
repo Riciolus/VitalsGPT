@@ -44,12 +44,12 @@ export default function Avatar() {
       </div>
 
       {isOption && (
-        <PopupWrapper isVisible={isOption} onClose={() => setIsOption(false)}>
+        <PopupWrapper isVisible={isOption} onClose={() => setIsOption(false)} classname="mt-3">
           <div
             onClick={() => signOut({ callbackUrl: "/", redirect: true })}
             className="text-red-500 dark:text-red-400 transition-colors hover:bg-red-100 dark:hover:bg-red-800/80 py-1.5 px-2 rounded-lg grid gap-1"
           >
-            <button className=" font-normal text-left w-32">Sign out</button>
+            <button className=" font-normal text-left text-sm w-32">Sign out</button>
           </div>
         </PopupWrapper>
       )}
