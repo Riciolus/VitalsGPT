@@ -4,7 +4,6 @@ import Image from "next/image";
 import Avatar from "../features/profile/Avatar";
 import Link from "next/link";
 import ThemeButton from "../features/theme/ThemeButton";
-import { signOut } from "next-auth/react";
 
 const Navbar = () => {
   return (
@@ -45,9 +44,9 @@ const Navbar = () => {
         </div>
 
         {/* Temporary for development */}
-        <span onClick={() => signOut()} className="text-sm font-medium group-hover:text-yellow-600">
+        {/* <span onClick={() => signOut()} className="text-sm font-medium group-hover:text-yellow-600">
           Temporary Logout
-        </span>
+        </span> */}
 
         <div className="flex justify-center items-center">
           {/* toggle theme button */}

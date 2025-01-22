@@ -1,9 +1,10 @@
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { UserChatSession } from "./SessionHistory";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import useChatSession from "@/store/useChatSessionStore";
+import PopupWrapper from "@/components/wrappers/popup";
 
 const SessionTitle = ({
   isActive,
@@ -13,34 +14,10 @@ const SessionTitle = ({
   chatSession: UserChatSession;
 }) => {
   const [isOption, setIsOption] = useState(false);
-  const popUpRef = useRef<HTMLDivElement>(null);
   const deleteChatSession = useChatSession((state) => state.deleteUserChatSession);
 
   // temporary idk if this true. only for dev speed
   const router = useRouter();
-
-  // Close pop-up when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        popUpRef.current &&
-        event.target instanceof Node &&
-        !popUpRef.current.contains(event.target)
-      ) {
-        setIsOption(false);
-      }
-    };
-
-    if (isOption) {
-      document.addEventListener("mousedown", handleClickOutside);
-    } else {
-      document.removeEventListener("mousedown", handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [isOption]);
 
   const handleDeleteChatSession = async () => {
     const response = await fetch(`/api/session/${chatSession.sessionId}`, {
@@ -76,7 +53,7 @@ const SessionTitle = ({
       </span>
       {isActive && (
         <>
-          <button onClick={() => setIsOption((prev) => !prev)} className="relative">
+          <button onClick={() => setIsOption(true)} className="relative">
             <svg
               width="18px"
               height="18px"
@@ -100,15 +77,12 @@ const SessionTitle = ({
           </button>
 
           {isOption && (
-            <div
-              ref={popUpRef}
-              className="absolute z-10 -right-3 grid  text-left  transition-all dark:bg-neutral-700 bg-neutral-100 py-1 px-1 rounded-xl border border-neutral-300 dark:border-neutral-500 shadow-xl"
-            >
-              <span
+            <PopupWrapper isVisible={isOption} onClose={() => setIsOption(false)}>
+              <div
                 onClick={handleDeleteChatSession}
-                className="text-red-500 dark:text-red-400 transition-colors hover:dark:bg-neutral-600 hover:bg-neutral-200 py-1.5 px-2 rounded-lg grid gap-1"
+                className="text-red-500 dark:text-red-400 transition-colors hover:bg-red-100 dark:hover:bg-red-800/80 py-1.5 px-2 rounded-lg grid gap-1"
               >
-                <span className="flex gap-1">
+                <span className="flex gap-2 font-normal">
                   <svg
                     width="18px"
                     height="18px"
@@ -154,8 +128,8 @@ const SessionTitle = ({
                   </svg>
                   Delete
                 </span>
-              </span>
-            </div>
+              </div>
+            </PopupWrapper>
           )}
         </>
       )}
