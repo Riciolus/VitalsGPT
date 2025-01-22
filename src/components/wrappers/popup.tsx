@@ -1,12 +1,15 @@
+import { cn } from "@/lib/utils";
 import { useEffect, useRef } from "react";
 
 const PopupWrapper = ({
   children,
   isVisible,
+  classname,
   onClose,
 }: {
   children: React.ReactNode;
   isVisible: boolean;
+  classname?: string;
   onClose: () => void;
 }) => {
   const popUpRef = useRef<HTMLDivElement>(null);
@@ -38,7 +41,10 @@ const PopupWrapper = ({
   return (
     <div
       ref={popUpRef}
-      className="absolute z-10 right-0 mt-7 grid  text-left  transition-all dark:bg-neutral-700 bg-neutral-100 py-1 px-1 rounded-xl border border-neutral-300 dark:border-neutral-500 shadow-xl"
+      className={cn(
+        "absolute z-10 right-0 mt-7 grid  text-left  transition-all dark:bg-neutral-700 bg-neutral-100 py-1 px-1 rounded-xl border border-neutral-300 dark:border-neutral-500 shadow-xl",
+        classname
+      )}
     >
       {children}
     </div>
