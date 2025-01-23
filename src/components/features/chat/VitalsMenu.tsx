@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Chatbox from "./chatbox/chatbox";
 import useChatSession from "@/store/useChatSessionStore";
+import { useMessageStore } from "@/store/useMessagesStore";
 
 const categories = [
   {
@@ -98,6 +99,7 @@ const createSession = async (userId: string) => {
 export default function VitalsMenu() {
   const [userMessage, setUserMessage] = useState<string>("");
   const setUserChatSession = useChatSession((state) => state.setUserChatSession);
+  const setMessages = useMessageStore((state) => state.setMessages);
   const { status, data } = useSession();
   const router = useRouter();
 
@@ -105,6 +107,9 @@ export default function VitalsMenu() {
     e.preventDefault();
 
     if (!userMessage.trim()) return;
+
+    // clear up previous messages data from previous session.
+    setMessages([]);
 
     if (status === "authenticated") {
       // handle chat/sessionId
@@ -160,6 +165,7 @@ export default function VitalsMenu() {
               <Chatbox
                 placeholder="Should I take a multivitamin?"
                 setUserMessage={setUserMessage}
+                userMessage={userMessage}
               />
             </form>
           </div>
