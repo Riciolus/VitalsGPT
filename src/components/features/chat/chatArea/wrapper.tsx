@@ -1,23 +1,24 @@
-import { Message } from "../VitalsChat";
 import ChatArea from "./chatArea";
 import { useEffect, useRef } from "react";
 import useChatSession from "@/store/useChatSessionStore";
 import { useSession } from "next-auth/react";
 import { generateTitle, getChatSession, handleEventSource } from "@/lib/utils";
+import { useMessageStore } from "@/store/useMessagesStore";
 
 const ChatAreaWrapper = ({
   sessionId,
-  messages,
   assistantMessageBuffer,
-  setMessages,
   setAssistantMessageBuffer,
 }: {
   sessionId: string;
-  messages: Message[];
   assistantMessageBuffer: string;
-  setMessages: React.Dispatch<React.SetStateAction<Message[]>>;
   setAssistantMessageBuffer: React.Dispatch<React.SetStateAction<string>>;
 }) => {
+  const messages = useMessageStore((state) => state.messages);
+  const isLoading = useMessageStore((state) => state.isLoading);
+  const setIsLoading = useMessageStore((state) => state.setLoading);
+  const setMessages = useMessageStore((state) => state.setMessages);
+  const appendMessage = useMessageStore((state) => state.appendMessage);
   const renameUserChatSession = useChatSession((state) => state.renameUserChatSession);
   const { status } = useSession();
   const chatContainerRef = useRef<HTMLDivElement | null>(null);
@@ -35,10 +36,11 @@ const ChatAreaWrapper = ({
   }, [messages, assistantMessageBuffer]); // Scrolls to bottom whenever `messages` change
 
   useEffect(() => {
+    setIsLoading(true);
     const initialMessage = sessionStorage.getItem("InitMsg");
     // handle user first message from VitalsMenu.tsx
     if (initialMessage) {
-      setMessages((prev) => [...prev, { role: "user", text: initialMessage }]);
+      appendMessage({ role: "user", text: initialMessage });
 
       sessionStorage.setItem("InitMsg", "");
 
@@ -46,10 +48,12 @@ const ChatAreaWrapper = ({
         try {
           const initialAssistantResponse = await handleEventSource(
             initialMessage,
-            setMessages,
             setAssistantMessageBuffer,
-            sessionId
+            sessionId,
+            appendMessage
           );
+
+          setIsLoading(true);
 
           // generate a title if user is in authenticated.
           if (status === "authenticated") {
@@ -68,14 +72,23 @@ const ChatAreaWrapper = ({
       if (status === "authenticated") {
         getChatSession(sessionId)
           .then((messagesFromDb) => {
-            setMessages((prev) => [...prev, ...messagesFromDb]);
+            setMessages([...messagesFromDb]);
+            setIsLoading(false);
           })
           .catch((error) => {
             console.error("Error fetching chat session:", error);
           });
       }
     }
-  }, [sessionId, status, renameUserChatSession, setAssistantMessageBuffer, setMessages]);
+  }, [
+    sessionId,
+    status,
+    renameUserChatSession,
+    setAssistantMessageBuffer,
+    setMessages,
+    appendMessage,
+    setIsLoading,
+  ]);
 
   return (
     <div className="scrollbar overflow-y-auto h-[calc(100vh-9.5rem)]">
@@ -84,7 +97,9 @@ const ChatAreaWrapper = ({
         ref={chatContainerRef}
         className="gap-3 w-full  px-7 pt-5 overflow-y-auto overflow-x-hidden"
       >
-        <ChatArea assistantMessageBuffer={assistantMessageBuffer} messages={messages} />
+        {!isLoading && (
+          <ChatArea assistantMessageBuffer={assistantMessageBuffer} messages={messages} />
+        )}
       </div>
     </div>
   );

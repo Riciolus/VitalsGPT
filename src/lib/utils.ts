@@ -11,7 +11,7 @@ export const handleVitalsChat = async (
   e: React.FormEvent<HTMLFormElement>,
   id: string,
   userMessage: string,
-  setMessages: React.Dispatch<React.SetStateAction<Message[]>>,
+  appendMessage: (message: Message) => void,
   setUserMessage: React.Dispatch<React.SetStateAction<string>>,
   setAssistantMessageBuffer: React.Dispatch<React.SetStateAction<string>>
 ) => {
@@ -22,16 +22,17 @@ export const handleVitalsChat = async (
   if (!userMessage.trim()) return;
 
   // append the user message
-  setMessages((prev) => [...prev, { role: "user", text: userMessage }]);
+  // setMessages((prev) => [...prev, { role: "user", text: userMessage }]);
+  appendMessage({ role: "user", text: userMessage });
 
-  handleEventSource(userMessage, setMessages, setAssistantMessageBuffer, id);
+  handleEventSource(userMessage, setAssistantMessageBuffer, id, appendMessage);
 };
 
 export const handleEventSource = (
   message: string,
-  setMessages: React.Dispatch<React.SetStateAction<Message[]>>, // Adjust type as needed
   setAssistantMessageBuffer: React.Dispatch<React.SetStateAction<string>>,
-  sessionId: string
+  sessionId: string,
+  appendMessage: (message: Message) => void
 ): Promise<string> => {
   return new Promise((resolve) => {
     const url = `${process.env.NEXT_PUBLIC_VITALS_API_URL}?message=${encodeURIComponent(
@@ -46,9 +47,7 @@ export const handleEventSource = (
     };
 
     eventSource.onerror = () => {
-      setMessages((prev) => {
-        return [...prev, { role: "assistant", text: buffer }];
-      }); // Finalize message
+      appendMessage({ role: "assistant", text: buffer }); // Finalize message
       setAssistantMessageBuffer(""); // Clear buffer
       eventSource.close(); // Close the connection
 

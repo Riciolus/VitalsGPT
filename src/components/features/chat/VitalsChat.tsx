@@ -11,8 +11,6 @@ export type Message = {
 };
 
 export default function ChatInterface() {
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [userMessage, setUserMessage] = useState<string>("");
   const [assistantMessageBuffer, setAssistantMessageBuffer] = useState<string>("");
   const { id } = useParams<{ id: string }>();
 
@@ -21,19 +19,11 @@ export default function ChatInterface() {
       {/* chat area */}
       <ChatAreaWrapper
         sessionId={id}
-        messages={messages}
         assistantMessageBuffer={assistantMessageBuffer}
         setAssistantMessageBuffer={setAssistantMessageBuffer}
-        setMessages={setMessages}
       />
 
-      <ChatboxWrapper
-        sessionId={id}
-        userMessage={userMessage}
-        setUserMessage={setUserMessage}
-        setMessages={setMessages}
-        setAssistantMessageBuffer={setAssistantMessageBuffer}
-      />
+      <ChatboxWrapper sessionId={id} setAssistantMessageBuffer={setAssistantMessageBuffer} />
     </div>
   );
 }

@@ -1,20 +1,19 @@
 import { handleVitalsChat } from "@/lib/utils";
 import Chatbox from "./chatbox";
-import { Message } from "../VitalsChat";
+import { useMessageStore } from "@/store/useMessagesStore";
+import { useState } from "react";
 
 const ChatboxWrapper = ({
   sessionId,
-  userMessage,
-  setMessages,
-  setUserMessage,
   setAssistantMessageBuffer,
 }: {
   sessionId: string;
-  userMessage: string;
-  setMessages: React.Dispatch<React.SetStateAction<Message[]>>;
-  setUserMessage: React.Dispatch<React.SetStateAction<string>>;
   setAssistantMessageBuffer: React.Dispatch<React.SetStateAction<string>>;
 }) => {
+  const [userMessage, setUserMessage] = useState<string>("");
+
+  const appendMessage = useMessageStore((state) => state.appendMessage);
+
   return (
     <div className="absolute bg-background  bottom-0 pb-6 pt-3 w-full flex justify-center text-neutral-500 dark:text-neutral-400 items-center">
       {/* input question */}
@@ -24,7 +23,7 @@ const ChatboxWrapper = ({
             e,
             sessionId,
             userMessage,
-            setMessages,
+            appendMessage,
             setUserMessage,
             setAssistantMessageBuffer
           )
