@@ -5,7 +5,6 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import useChatSession from "@/store/useChatSessionStore";
 import PopupWrapper from "@/components/wrappers/popup";
-import { useMessageStore } from "@/store/useMessagesStore";
 
 const SessionTitle = ({
   isActive,
@@ -15,7 +14,6 @@ const SessionTitle = ({
   chatSession: UserChatSession;
 }) => {
   const [isOption, setIsOption] = useState(false);
-  const setLoading = useMessageStore((state) => state.setLoading);
   const deleteChatSession = useChatSession((state) => state.deleteUserChatSession);
 
   // temporary idk if this true. only for dev speed
@@ -42,7 +40,6 @@ const SessionTitle = ({
 
   return (
     <Link
-      onClick={() => (isActive ? null : () => setLoading(true))}
       href={`/chat/${chatSession.sessionId}`}
       aria-disabled={isActive}
       className={cn(

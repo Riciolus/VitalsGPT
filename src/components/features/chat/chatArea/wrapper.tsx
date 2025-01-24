@@ -36,6 +36,7 @@ const ChatAreaWrapper = ({
   }, [messages, assistantMessageBuffer]); // Scrolls to bottom whenever `messages` change
 
   useEffect(() => {
+    setIsLoading(true);
     const initialMessage = sessionStorage.getItem("InitMsg");
     // handle user first message from VitalsMenu.tsx
     if (initialMessage) {
@@ -51,6 +52,8 @@ const ChatAreaWrapper = ({
             sessionId,
             appendMessage
           );
+
+          setIsLoading(true);
 
           // generate a title if user is in authenticated.
           if (status === "authenticated") {
@@ -70,6 +73,7 @@ const ChatAreaWrapper = ({
         getChatSession(sessionId)
           .then((messagesFromDb) => {
             setMessages([...messagesFromDb]);
+            setIsLoading(false);
           })
           .catch((error) => {
             console.error("Error fetching chat session:", error);
