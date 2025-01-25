@@ -1,4 +1,5 @@
 import { Message } from "@/components/features/chat/VitalsChat";
+import { UserChatSession } from "@/components/features/sessionHistory/SessionHistory";
 import clsx from "clsx";
 import { ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
@@ -9,23 +10,27 @@ export function cn(...inputs: ClassValue[]) {
 
 export const handleVitalsChat = async (
   e: React.FormEvent<HTMLFormElement>,
-  id: string,
+  status: string,
+  sessionId: string,
   userMessage: string,
   appendMessage: (message: Message) => void,
   setUserMessage: React.Dispatch<React.SetStateAction<string>>,
-  setAssistantMessageBuffer: React.Dispatch<React.SetStateAction<string>>
+  setAssistantMessageBuffer: React.Dispatch<React.SetStateAction<string>>,
+  updateUserChatSession: (userId: string, chatSession: UserChatSession) => void
 ) => {
   e.preventDefault();
 
-  setUserMessage("");
-
   if (!userMessage.trim()) return;
 
-  // append the user message
-  // setMessages((prev) => [...prev, { role: "user", text: userMessage }]);
+  setUserMessage("");
+
   appendMessage({ role: "user", text: userMessage });
 
-  handleEventSource(userMessage, setAssistantMessageBuffer, id, appendMessage);
+  if (status === "authenticated") {
+    updateUserChatSession(sessionId, { updatedAt: new Date().toISOString() });
+  }
+
+  handleEventSource(userMessage, setAssistantMessageBuffer, sessionId, appendMessage);
 };
 
 export const handleEventSource = (
@@ -59,7 +64,8 @@ export const handleEventSource = (
 export const generateTitle = async (
   initialAssistantResponse: string,
   sessionId: string,
-  renameUserChatSession: (sessionId: string, newTitle: string) => void
+  // renameUserChatSession: (sessionId: string, newTitle: string) => void
+  updateUserChatSession: (sessionId: string, NewDataSession: UserChatSession) => void
 ) => {
   const response = await fetch("/api/chat/title", {
     method: "POST",
@@ -69,9 +75,12 @@ export const generateTitle = async (
     body: JSON.stringify({ initialAssistantResponse, sessionId }),
   });
 
-  const data = await response.json();
+  const titleResponse = await response.json();
 
-  renameUserChatSession(sessionId, data.title);
+  updateUserChatSession(sessionId, {
+    title: titleResponse.title as string,
+    updatedAt: new Date(),
+  });
 };
 
 export const getChatSession = async (sessionId: string) => {
@@ -85,3 +94,9 @@ export const getChatSession = async (sessionId: string) => {
 
   return data.messages;
 };
+
+export function validateSessionId(id: string, uuidRegex: RegExp) {
+  if (!id || !uuidRegex.test(id)) {
+    throw new Error("Invalid request: 'sessionId' is missing or not a valid UUID");
+  }
+}

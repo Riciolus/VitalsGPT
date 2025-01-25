@@ -3,9 +3,9 @@ import { useEffect } from "react";
 import Categories from "./categories";
 
 export interface UserChatSession {
-  sessionId: string; // or number, depending on your actual data type
-  title: string;
-  updatedAt: Date;
+  sessionId?: string; // or number, depending on your actual data type
+  title?: string;
+  updatedAt: Date | string;
 }
 
 const getUserChatSession = async () => {
@@ -23,7 +23,9 @@ const getUserChatSession = async () => {
 
 const categorizeSessions = (userChatSession: UserChatSession[]) => {
   const today = new Date();
+
   const startOfToday = new Date(today.setHours(0, 0, 0, 0));
+
   const startOfYesterday = new Date(startOfToday);
   startOfYesterday.setDate(startOfYesterday.getDate() - 1);
 
@@ -57,6 +59,13 @@ const categorizeSessions = (userChatSession: UserChatSession[]) => {
     } else if (updatedAt >= startOfLast30Days && updatedAt < startOfLast7Days) {
       categories.last30Days.push(session);
     }
+  });
+
+  // Sort each category by updatedAt in descending order
+  Object.keys(categories).forEach((category) => {
+    categories[category as keyof typeof categories].sort(
+      (a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
+    );
   });
 
   return categories;

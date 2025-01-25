@@ -19,7 +19,7 @@ const ChatAreaWrapper = ({
   const setIsLoading = useMessageStore((state) => state.setLoading);
   const setMessages = useMessageStore((state) => state.setMessages);
   const appendMessage = useMessageStore((state) => state.appendMessage);
-  const renameUserChatSession = useChatSession((state) => state.renameUserChatSession);
+  const updateUserChatSession = useChatSession((state) => state.updateUserChatSession);
   const { status } = useSession();
   const chatContainerRef = useRef<HTMLDivElement | null>(null);
   // sessionId
@@ -36,8 +36,8 @@ const ChatAreaWrapper = ({
   }, [messages, assistantMessageBuffer]); // Scrolls to bottom whenever `messages` change
 
   useEffect(() => {
-    setIsLoading(true);
     const initialMessage = sessionStorage.getItem("InitMsg");
+
     // handle user first message from VitalsMenu.tsx
     if (initialMessage) {
       appendMessage({ role: "user", text: initialMessage });
@@ -53,11 +53,11 @@ const ChatAreaWrapper = ({
             appendMessage
           );
 
-          setIsLoading(true);
+          setIsLoading(false);
 
           // generate a title if user is in authenticated.
           if (status === "authenticated") {
-            generateTitle(initialAssistantResponse, sessionId, renameUserChatSession);
+            generateTitle(initialAssistantResponse, sessionId, updateUserChatSession);
           }
         } catch (error) {
           console.error("Error handling EventSource:", error);
@@ -69,6 +69,8 @@ const ChatAreaWrapper = ({
 
     // handle user access session from sidebar.
     else {
+      setIsLoading(true);
+
       if (status === "authenticated") {
         getChatSession(sessionId)
           .then((messagesFromDb) => {
@@ -83,7 +85,8 @@ const ChatAreaWrapper = ({
   }, [
     sessionId,
     status,
-    renameUserChatSession,
+    // renameUserChatSession,
+    updateUserChatSession,
     setAssistantMessageBuffer,
     setMessages,
     appendMessage,

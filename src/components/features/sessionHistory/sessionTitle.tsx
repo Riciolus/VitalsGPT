@@ -30,7 +30,7 @@ const SessionTitle = ({
     const result = await response.json();
 
     if (result.status) {
-      deleteChatSession(chatSession.sessionId);
+      deleteChatSession(chatSession.sessionId as string);
 
       router.push("/");
     } else {

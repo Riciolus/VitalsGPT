@@ -99,7 +99,7 @@ export async function GET(req: NextRequest) {
         }
 
         // Save to database after streaming completes
-        await saveToDatabase(message, assistantMessage, sessionId as string);
+        void saveToDatabase(message, assistantMessage, sessionId as string);
 
         // Close the stream
         controller.close();

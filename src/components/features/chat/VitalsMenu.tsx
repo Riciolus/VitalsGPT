@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Chatbox from "./chatbox/chatbox";
 import useChatSession from "@/store/useChatSessionStore";
+import { useMessageStore } from "@/store/useMessagesStore";
 
 const categories = [
   {
@@ -97,6 +98,7 @@ const createSession = async (userId: string) => {
 
 export default function VitalsMenu() {
   const [userMessage, setUserMessage] = useState<string>("");
+  const setMessages = useMessageStore((state) => state.setMessages);
   const setUserChatSession = useChatSession((state) => state.setUserChatSession);
   const { status, data } = useSession();
   const router = useRouter();
@@ -105,6 +107,8 @@ export default function VitalsMenu() {
     e.preventDefault();
 
     if (!userMessage.trim()) return;
+
+    setMessages([]);
 
     if (status === "authenticated") {
       // handle chat/sessionId

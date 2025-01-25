@@ -2,6 +2,8 @@ import { handleVitalsChat } from "@/lib/utils";
 import Chatbox from "./chatbox";
 import { useMessageStore } from "@/store/useMessagesStore";
 import { useState } from "react";
+import { useSession } from "next-auth/react";
+import useChatSession from "@/store/useChatSessionStore";
 
 const ChatboxWrapper = ({
   sessionId,
@@ -12,7 +14,10 @@ const ChatboxWrapper = ({
 }) => {
   const [userMessage, setUserMessage] = useState<string>("");
 
+  const { status } = useSession();
+
   const appendMessage = useMessageStore((state) => state.appendMessage);
+  const updateUserChatSession = useChatSession((state) => state.updateUserChatSession);
 
   return (
     <div className="absolute bg-background  bottom-0 pb-6 pt-3 w-full flex justify-center text-neutral-500 dark:text-neutral-400 items-center">
@@ -21,11 +26,13 @@ const ChatboxWrapper = ({
         onSubmit={(e) =>
           handleVitalsChat(
             e,
+            status,
             sessionId,
             userMessage,
             appendMessage,
             setUserMessage,
-            setAssistantMessageBuffer
+            setAssistantMessageBuffer,
+            updateUserChatSession
           )
         }
       >

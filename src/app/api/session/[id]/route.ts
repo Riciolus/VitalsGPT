@@ -1,16 +1,11 @@
 import { sessionsTable } from "@/db/schema/session";
+import { validateSessionId } from "@/lib/utils";
 import { eq, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/neon-http";
 import { NextRequest, NextResponse } from "next/server";
 
 const db = drizzle(process.env.DATABASE_URL!);
 const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-
-function validateSessionId(id: string) {
-  if (!id || !uuidRegex.test(id)) {
-    throw new Error("Invalid request: 'sessionId' is missing or not a valid UUID");
-  }
-}
 
 function handleError(error: unknown) {
   if (error instanceof Error) {
@@ -28,7 +23,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
   try {
     const { id } = await params;
 
-    validateSessionId(id);
+    validateSessionId(id, uuidRegex);
 
     const data = await db
       .select({ messages: sessionsTable.messages })
@@ -49,7 +44,7 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ i
   try {
     const { id } = await params;
 
-    validateSessionId(id);
+    validateSessionId(id, uuidRegex);
 
     const sessionExists = await db
       .select({ count: sql<number>`COUNT(*)` })
