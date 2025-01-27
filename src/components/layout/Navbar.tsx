@@ -5,19 +5,25 @@ import Avatar from "../features/profile/Avatar";
 import Link from "next/link";
 import ThemeButton from "../features/theme/ThemeButton";
 
+const Logo = () => {
+  return (
+    <Link href="/" className="flex items-center gap-2">
+      <Image
+        src="/icon.svg"
+        alt="icon"
+        width={30}
+        height={30}
+        style={{ width: "30px", height: "30px" }}
+      />
+      <span className="font-bold">VitalsGPT</span>
+    </Link>
+  );
+};
+
 const Navbar = () => {
   return (
     <nav className="flex justify-between items-center h-16 w-full px-7 border-b dark:border-neutral-700">
-      <Link href="/" className="flex items-center gap-2">
-        <Image
-          src="/icon.svg"
-          alt="icon"
-          width={30}
-          height={30}
-          style={{ width: "30px", height: "30px" }}
-        />
-        <span className="font-bold">VitalsGPT</span>
-      </Link>
+      <Logo />
 
       <div className="flex items-center gap-5">
         <div className="info md:flex items-center gap-5 hidden">
@@ -38,20 +44,15 @@ const Navbar = () => {
             </svg>
             <span className="text-sm font-medium group-hover:text-yellow-600">Docs</span>
           </a>
-          <div>
-            <hr className="h-5 w-0.5 border-none bg-gray-200 dark:bg-neutral-700/30" />
-          </div>
+          disini hr
+          <hr className="h-5 w-0.5 border-none bg-gray-200 dark:bg-neutral-700/30" />
         </div>
-
-        {/* Temporary for development */}
-        {/* <span onClick={() => signOut()} className="text-sm font-medium group-hover:text-yellow-600">
-          Temporary Logout
-        </span> */}
 
         <div className="flex justify-center items-center">
           {/* toggle theme button */}
-          <div className="flex md:hidden">
+          <div className="flex md:hidden justify-center items-center">
             <ThemeButton />
+            <hr className="h-5 w-0.5 border-none bg-gray-200 dark:bg-neutral-700/30 mx-3 " />
           </div>
           <Avatar />
         </div>

@@ -9,6 +9,7 @@ type InputProps = {
   value?: string | number;
   name?: string;
   required?: boolean;
+  children?: React.ReactNode;
   onChange?: React.ChangeEventHandler<HTMLInputElement>;
   onFocus?: React.FocusEventHandler<HTMLInputElement>;
   onBlur?: React.FocusEventHandler<HTMLInputElement>;
@@ -28,28 +29,36 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
       onBlur,
       className,
       placeholder,
+      children,
     }: InputProps,
     ref
   ) => {
     return (
-      <input
-        ref={ref} // Pass the ref to the input element
-        id={id}
-        onChange={onChange}
-        onFocus={onFocus}
-        onBlur={onBlur}
-        value={value}
-        name={name}
-        type={type}
-        required={required}
-        autoComplete="off"
-        inputMode="text"
+      <div
         className={cn(
-          "outline-none rounded-md border bg-neutral-100 dark:bg-neutral-700 border-neutral-300 dark:border-neutral-600 text-sm placeholder:text-neutral-500 placeholder:dark:text-neutral-400 font-medium px-2 py-1",
+          "rounded-md flex border bg-neutral-100 dark:bg-neutral-700 border-neutral-300 dark:border-neutral-600 text-sm  font-medium px-2 py-1",
           className
         )}
-        placeholder={placeholder}
-      />
+      >
+        <input
+          ref={ref} // Pass the ref to the input element
+          id={id}
+          onChange={onChange}
+          onFocus={onFocus}
+          onBlur={onBlur}
+          value={value}
+          name={name}
+          type={type}
+          required={required}
+          autoComplete="off"
+          inputMode="text"
+          placeholder={placeholder}
+          className="outline-none border-none pr-2 w-full bg-transparent h-full placeholder:text-neutral-500 placeholder:dark:text-neutral-400"
+        />
+
+        {/* icon or anything */}
+        {children}
+      </div>
     );
   }
 );

@@ -77,7 +77,10 @@ export async function GET(req: NextRequest) {
           messages: [
             {
               role: "system",
-              content: "You are a humble and knowledgeable medical assistant.",
+              content:
+                // "You are a humble and knowledgeable medical assistant. Answer the question short and compact",
+                // content: "You are a humble and knowledgeable doctor.",
+                "You are a concise and knowledgeable medical assistant. Provide short, accurate answers with clear and actionable steps for treatment or care.",
             },
             {
               role: "user",
