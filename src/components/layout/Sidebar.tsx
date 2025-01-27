@@ -1,12 +1,13 @@
 "use client";
 
-import { memo, useEffect, useState } from "react";
+import { memo, useEffect } from "react";
 import Button from "../ui/button";
 import Input from "../ui/input";
 import { cn } from "@/lib/utils";
 import ThemeButton from "../features/theme/ThemeButton";
 import SessionHistoryWrapper from "../wrappers/SessionHistory";
 import Link from "next/link";
+import useSidebarStore from "@/store/useSidebarStore";
 
 const ToggleSidebarButton = ({ onClick }: { onClick: () => void }) => {
   return (
@@ -28,11 +29,13 @@ const ToggleSidebarButton = ({ onClick }: { onClick: () => void }) => {
 };
 
 const Sidebar = memo(() => {
-  const [toggleSidebar, setToggleSidebar] = useState(false);
+  // const [toggleSidebar, setToggleSidebar] = useState(false);
+  const setToggleSidebar = useSidebarStore((state) => state.setToggleSidebar);
+  const toggleSidebar = useSidebarStore((state) => state.toggleSidebar);
 
   useEffect(() => {
     setToggleSidebar(window.innerWidth > 762);
-  }, []);
+  }, [setToggleSidebar]);
 
   return (
     <>
@@ -52,7 +55,7 @@ const Sidebar = memo(() => {
             {/* upper content */}
             <div className="flex items-center gap-3 px-3 justify-between w-full">
               {/* toggle sidebar */}
-              <ToggleSidebarButton onClick={() => setToggleSidebar((prev) => !prev)} />
+              <ToggleSidebarButton onClick={() => setToggleSidebar()} />
 
               {/* search */}
               <div className={cn(!toggleSidebar && "hidden")}>
