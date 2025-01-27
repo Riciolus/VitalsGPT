@@ -7,8 +7,6 @@ import useChatSession from "@/store/useChatSessionStore";
 import PopupWrapper from "@/components/wrappers/popup";
 import useSidebarStore from "@/store/useSidebarStore";
 
-const isWindowView = window.innerWidth < 762;
-
 const SessionTitle = ({
   isActive,
   chatSession,
@@ -43,7 +41,8 @@ const SessionTitle = ({
   };
 
   const handleToggleSidebar = () => {
-    if (isWindowView) setToggleSidebar(false);
+    // sidebar will toggled off in mobile view
+    if (window.innerWidth < 762) setToggleSidebar(false);
   };
 
   return (

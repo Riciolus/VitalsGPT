@@ -9,7 +9,9 @@ import { useState } from "react";
 
 export default function Avatar() {
   const [isOption, setIsOption] = useState(false);
-  const { status, data } = useSession();
+
+  // propertyd data is not used because the dummyAva is hardcode for now.
+  const { status } = useSession();
   const { theme } = useTheme();
 
   const handleClickAvatar = () => {
@@ -31,7 +33,8 @@ export default function Avatar() {
         <Image
           src={
             status === "authenticated"
-              ? `/avatar/${data.user.image}`
+              ? // ? `/avatar/${data.user.image}`
+                "/avatar/dummyAva.jpeg"
               : theme === "light"
               ? "/avatar/default-avatar.svg"
               : "/avatar/default-avatar-dark.svg"

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import type { Viewport } from "next";
 import "./globals.css";
 import { ThemeProvider } from "@/components/wrappers/ThemeProvider";
 import { Poppins } from "next/font/google";
@@ -6,9 +7,34 @@ import Navbar from "@/components/layout/Navbar";
 import { SessionProvider } from "next-auth/react";
 
 export const metadata: Metadata = {
+  // viewport: "width=device-width, initial-scale=1, interactive-widget=resizes-content",
   title: "VitalsGPT",
   description:
-    "VitalsGPT is an intelligent assistant for monitoring and analyzing health data, offering personalized insights and recommendations.",
+    "VitalsGPT is an AI-powered web application designed to assist with medical inquiries.",
+  openGraph: {
+    title: "VitalsGPT",
+    description: "AI-powered web application designed to assist with medical inquiries.",
+    images: [
+      {
+        url: "/og-image.png", // Path to your OG image
+        width: 1200,
+        height: 630,
+        alt: "Preview of your page",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "VitalsGPT",
+    description: "AI-powered web application designed to assist with medical inquiries.",
+    images: ["/og-image.png"], // Twitter accepts an array of image URLs
+  },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  interactiveWidget: "resizes-content",
 };
 
 const poppins = Poppins({
@@ -26,10 +52,6 @@ export default async function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <meta
-          name="viewport"
-          content="width=device-width, initial-scale=1, interactive-widget=resizes-content"
-        />
         {/* Favicon for most browsers */}
         <link rel="icon" href="/icon.svg" type="image/svg+xml" />
         {/* Apple Touch Icon */}
