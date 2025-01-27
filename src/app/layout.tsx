@@ -8,7 +8,27 @@ import { SessionProvider } from "next-auth/react";
 export const metadata: Metadata = {
   title: "VitalsGPT",
   description:
-    "VitalsGPT is an intelligent assistant for monitoring and analyzing health data, offering personalized insights and recommendations.",
+    "VitalsGPT is an AI-powered web application designed to assist with medical inquiries.",
+  openGraph: {
+    title: "VitalsGPT",
+    description:
+      "VitalsGPT is an AI-powered web application designed to assist with medical inquiries.",
+    images: [
+      {
+        url: "/opengraph-image.jpg", // Path to your OG image
+        width: 1200,
+        height: 630,
+        alt: "Preview of your page",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "VitalsGPT",
+    description:
+      "VitalsGPT is an AI-powered web application designed to assist with medical inquiries.",
+    images: ["/opengraph-image.jpg"], // Twitter accepts an array of image URLs
+  },
 };
 
 const poppins = Poppins({
