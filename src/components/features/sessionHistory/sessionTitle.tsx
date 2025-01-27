@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import useChatSession from "@/store/useChatSessionStore";
 import PopupWrapper from "@/components/wrappers/popup";
+import useSidebarStore from "@/store/useSidebarStore";
 
 const SessionTitle = ({
   isActive,
@@ -15,6 +16,7 @@ const SessionTitle = ({
 }) => {
   const [isOption, setIsOption] = useState(false);
   const deleteChatSession = useChatSession((state) => state.deleteUserChatSession);
+  const setToggleSidebar = useSidebarStore((state) => state.setToggleSidebar);
 
   // temporary idk if this true. only for dev speed
   const router = useRouter();
@@ -38,8 +40,14 @@ const SessionTitle = ({
     }
   };
 
+  const handleToggleSidebar = () => {
+    // sidebar will toggled off in mobile view
+    if (window.innerWidth < 762) setToggleSidebar(false);
+  };
+
   return (
     <Link
+      onClick={handleToggleSidebar}
       href={`/chat/${chatSession.sessionId}`}
       aria-disabled={isActive}
       className={cn(

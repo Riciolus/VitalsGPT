@@ -1,13 +1,13 @@
 import { UserChatSession } from "@/components/features/sessionHistory/SessionHistory";
 import { create } from "zustand";
 
-interface CounterState {
+type CounterState = {
   userChatSession: UserChatSession[];
   setUserChatSession: (userChatSession: UserChatSession[]) => void;
   // renameUserChatSession: (sessionId: string, newTitle: string) => void;
   updateUserChatSession: (sessionId: string, session: UserChatSession) => void;
   deleteUserChatSession: (sessionId: string) => void;
-}
+};
 
 const useChatSession = create<CounterState>((set) => ({
   userChatSession: [],
