@@ -4,9 +4,32 @@ import { drizzle } from "drizzle-orm/neon-http";
 import { sessionsTable } from "@/db/schema/session";
 import { eq, sql } from "drizzle-orm";
 
+type Message = {
+  role: "user" | "assistant";
+  text: string;
+};
+
 export const dynamic = "force-dynamic"; // Prevents caching on Vercel
 
 const db = drizzle(process.env.DATABASE_URL!);
+
+async function getSessionHistory(sessionId: string | null): Promise<string | undefined> {
+  if (!sessionId) return;
+
+  // Query the database
+  const result = await db
+    .select({ messages: sessionsTable.messages })
+    .from(sessionsTable)
+    .where(eq(sessionsTable.id, sessionId));
+
+  // Extract the messages from the first row
+  const messages: Message[] = result[0].messages as Message[];
+
+  // Construct session history as a formatted string
+  return messages
+    .map((msg) => `${msg.role === "user" ? "User" : "Assistant"}: ${msg.text}`)
+    .join("\n");
+}
 
 async function saveToDatabase(message: string, assistantMessage: string, sessionId: string) {
   if (!sessionId || sessionId === "guest") {
@@ -58,12 +81,19 @@ export async function GET(req: NextRequest) {
   }
 
   const token = process.env.NEXT_PUBLIC_INFERENCE_API_TOKEN;
+
+  const chatHistory = await getSessionHistory(sessionId);
+
+  const inputPrompt = `${chatHistory}\nUser: ${message}\n`;
+
   const client = new HfInference(token);
 
   // Create a readable stream
   const stream = new ReadableStream({
     async start(controller) {
       let assistantMessage = "";
+      let buffer = "";
+
       try {
         // Function to send data to the stream
         const sendEvent = (data: string) => {
@@ -77,14 +107,13 @@ export async function GET(req: NextRequest) {
           messages: [
             {
               role: "system",
-              content:
-                // "You are a humble and knowledgeable medical assistant. Answer the question short and compact",
-                // content: "You are a humble and knowledgeable doctor.",
-                "You are a concise and knowledgeable medical assistant. Provide short, accurate answers with clear and actionable steps for treatment or care.",
+              content: "You are a humble and knowledgeable medical assistant.",
+              //     "You are a humble and knowledgeable doctor.",
+              //   // "You are a concise and knowledgeable medical assistant. Provide short, accurate answers with clear and actionable steps for treatment or care.",
             },
             {
               role: "user",
-              content: message,
+              content: inputPrompt,
             },
           ],
           max_tokens: 200,
@@ -95,10 +124,36 @@ export async function GET(req: NextRequest) {
           if (chunk.choices && chunk.choices.length > 0) {
             const newContent = chunk.choices[0].delta?.content;
             if (newContent) {
-              assistantMessage += newContent;
-              sendEvent(newContent);
+              buffer += newContent; // Add chunk to buffer
+
+              // Check if buffer contains a full word or line
+              const split = buffer.split(/\b/); // Split by word boundaries
+              const completeWords = split.slice(0, -1).join(""); // Extract complete words
+              buffer = split.slice(-1).join(""); // Keep the remaining incomplete part
+
+              if (completeWords) {
+                // Check for and remove the "Assistant:" prefix only in the first chunk
+                if (assistantMessage === "" && completeWords.startsWith("Assistant:")) {
+                  const sanitizedWords = completeWords.replace(/^Assistant:\s*/, ""); // Remove prefix
+                  assistantMessage += sanitizedWords;
+                  sendEvent(sanitizedWords);
+                } else {
+                  // Check and skip isolated ":" or "Assistant"
+                  const sanitizedWords = completeWords.replace(/^:\s*/, ""); // Remove leading ":"
+                  if (sanitizedWords !== "Assistant" && sanitizedWords !== ":") {
+                    assistantMessage += sanitizedWords;
+                    sendEvent(sanitizedWords);
+                  }
+                }
+              }
             }
           }
+        }
+
+        // Send any remaining buffered data
+        if (buffer.trim()) {
+          assistantMessage += buffer;
+          sendEvent(buffer);
         }
 
         // Save to database after streaming completes
