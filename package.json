@@ -13,7 +13,6 @@
     "@neondatabase/serverless": "^0.10.4",
     "bcryptjs": "^2.4.3",
     "clsx": "^2.1.1",
-    "dotenv": "^16.4.7",
     "drizzle-orm": "^0.38.3",
     "next": "15.0.4",
     "next-auth": "^5.0.0-beta.25",
