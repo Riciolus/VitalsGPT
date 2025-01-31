@@ -2,8 +2,6 @@
 
 import PopupWrapper from "@/components/wrappers/popup";
 import { signIn, signOut, useSession } from "next-auth/react";
-
-import { useTheme } from "next-themes";
 import Image from "next/image";
 import { useState } from "react";
 
@@ -12,7 +10,6 @@ export default function Avatar() {
 
   // propertyd data is not used because the dummyAva is hardcode for now.
   const { status } = useSession();
-  const { theme } = useTheme();
 
   const handleClickAvatar = () => {
     if (status === "unauthenticated") {
@@ -35,8 +32,6 @@ export default function Avatar() {
             status === "authenticated"
               ? // ? `/avatar/${data.user.image}`
                 "/avatar/dummyAva.jpeg"
-              : theme === "light"
-              ? "/avatar/default-avatar.svg"
               : "/avatar/default-avatar-dark.svg"
           }
           alt="@avatar"

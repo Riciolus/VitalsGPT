@@ -103,6 +103,8 @@ export default function VitalsMenu() {
   const { status, data } = useSession();
   const router = useRouter();
 
+  console.log(data);
+
   const handleStartSession = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 

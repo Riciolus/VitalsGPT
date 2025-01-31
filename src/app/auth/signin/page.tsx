@@ -31,7 +31,7 @@ export default function SignInPage() {
     });
 
     if (res?.error) {
-      console.error("Error signing in:", res.error);
+      console.log("Error signing in:", res.error);
       if (res.error === "CredentialsSignin") {
         setErrorMessage("Invalid email or password");
       } else {
@@ -80,6 +80,7 @@ export default function SignInPage() {
             <div className="w-full flex flex-col justify-center  gap-3">
               <div>
                 <Button
+                  type="submit"
                   disabled={isLoading}
                   className="border w-full dark:bg-lime-800 dark:disabled:bg-lime-800/70 bg-lime-500 disabled:bg-lime-600 "
                 >
@@ -96,7 +97,11 @@ export default function SignInPage() {
               {/* Providers */}
               <div className="flex gap-2">
                 {/* Google Provider */}
-                <Button className="border w-full flex justify-center items-center">
+                <Button
+                  type="button"
+                  onClick={() => signIn("google", { redirectTo: "/" })}
+                  className="border w-full flex justify-center items-center"
+                >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     x="0px"
@@ -125,7 +130,10 @@ export default function SignInPage() {
                 </Button>
 
                 {/* Facebook Provider */}
-                <Button className="border w-full flex justify-center items-center">
+                <Button
+                  disabled
+                  className="cursor-not-allowed border w-full flex justify-center items-center"
+                >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     x="0px"
@@ -157,7 +165,11 @@ export default function SignInPage() {
                 </Button>
 
                 {/* Github Provider */}
-                <Button className="border w-full flex justify-center items-center">
+                <Button
+                  onClick={() => signIn("github", { redirectTo: "/" })}
+                  type="button"
+                  className="border w-full flex justify-center items-center"
+                >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     x="0px"

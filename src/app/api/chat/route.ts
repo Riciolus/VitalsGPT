@@ -14,7 +14,7 @@ export const dynamic = "force-dynamic"; // Prevents caching on Vercel
 const db = drizzle(process.env.DATABASE_URL!);
 
 async function getSessionHistory(sessionId: string | null): Promise<string | undefined> {
-  if (!sessionId) return;
+  if (!sessionId || sessionId === "guest") return;
 
   // Query the database
   const result = await db

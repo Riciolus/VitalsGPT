@@ -4,6 +4,8 @@ import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { or, eq } from "drizzle-orm";
 import { compare } from "bcryptjs";
+import Google from "next-auth/providers/google";
+import GitHub from "next-auth/providers/github";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
@@ -59,11 +61,57 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         }
       },
     }),
+    Google,
+    GitHub,
   ],
   pages: {
     signIn: "/auth/signin",
   },
   callbacks: {
+    async signIn({ account, profile, user }) {
+      if (account?.provider === "google" || account?.provider === "github") {
+        try {
+          const userDb = await db
+            .select()
+            .from(usersTable)
+            .where(or(eq(usersTable.email, profile?.email as string)))
+            .limit(1)
+            .then((result) => result[0]);
+
+          if (userDb) {
+            user.id = userDb.id;
+
+            return true;
+          }
+
+          const createUser = await db
+            .insert(usersTable)
+            .values({
+              email: profile?.email as string,
+              username: profile?.name as string,
+              password: "",
+            })
+            .returning({ id: usersTable.id });
+
+          if (!createUser[0].id) {
+            return false;
+          }
+
+          user.id = createUser[0].id;
+
+          return true;
+        } catch {
+          return false;
+        }
+      }
+
+      if (account?.provider === "credentials") {
+        return true;
+      }
+
+      return false;
+    },
+
     async jwt({ token, user }) {
       // When a user logs in, attach their ID to the token
       if (user) {
@@ -81,6 +129,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         session.user.image = token.picture;
         session.user.name = token.username as string;
       }
+
       return session;
     },
   },
