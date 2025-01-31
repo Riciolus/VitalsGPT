@@ -40,7 +40,7 @@ const Sidebar = memo(() => {
   return (
     <div
       className={cn(
-        "w-[295px]  z-50 fixed md:static overflow-hidden h-full   shrink-0 flex transition-all duration-[50ms] ease-in-out",
+        "w-[295px]  z-50 fixed md:static overflow-hidden h-full bg-background  shrink-0 flex transition-all duration-[50ms] ease-in-out",
         !toggleSidebar && " w-[40px] h-fit bg-transparent"
       )}
     >
