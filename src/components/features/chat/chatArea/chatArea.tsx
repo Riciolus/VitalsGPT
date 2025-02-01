@@ -21,8 +21,10 @@ const ChatArea = ({
           >
             <Card
               className={cn(
-                "w-fit text-base p-2 rounded-lg ",
-                msg.role === "user" ? "max-w-[80%] md:max-w-[47%]" : "max-w-[90%] md:max-w-[60%]"
+                "w-fit text-base p-2 rounded-lg",
+                msg.role === "user"
+                  ? "max-w-[80%] md:max-w-[47%]"
+                  : "max-w-[90%] md:max-w-[60%] border- dark:bg-neutral-50/5 px-3.5 py-3"
               )}
             >
               {msg.text}
