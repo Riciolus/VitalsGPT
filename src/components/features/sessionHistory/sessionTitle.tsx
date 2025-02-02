@@ -56,7 +56,7 @@ const SessionTitle = ({
         isOption && "hover:bg-transparent hover:dark:bg-transparent"
       )}
     >
-      <span className="line-clamp-1 text-left whitespace-pre-line text-ellipsis text-neutral-600 dark:text-neutral-300/80">
+      <span className="line-clamp-1 text-left font-mono whitespace-pre-line text-ellipsis text-neutral-600 dark:text-neutral-300/80">
         {chatSession.title}
       </span>
       {isActive && (

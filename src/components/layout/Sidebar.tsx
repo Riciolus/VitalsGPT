@@ -2,12 +2,12 @@
 
 import { memo, useEffect } from "react";
 import Button from "../ui/button";
-import Input from "../ui/input";
 import { cn } from "@/lib/utils";
 import ThemeButton from "../features/theme/ThemeButton";
 import SessionHistoryWrapper from "../wrappers/SessionHistory";
 import Link from "next/link";
 import useSidebarStore from "@/store/useSidebarStore";
+import Searchbar from "../features/search/Searchbar";
 
 const ToggleSidebarButton = ({ onClick }: { onClick: () => void }) => {
   return (
@@ -58,7 +58,7 @@ const Sidebar = memo(() => {
 
             {/* search */}
             <div className={cn(!toggleSidebar && "hidden")}>
-              <Input placeholder="Search Chats" />
+              <Searchbar />
             </div>
 
             {/* new chat */}

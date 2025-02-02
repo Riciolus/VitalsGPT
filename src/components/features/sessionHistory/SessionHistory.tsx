@@ -73,6 +73,9 @@ const categorizeSessions = (userChatSession: UserChatSession[]) => {
 
 const SessionHistory = () => {
   const userChatSession = useChatSession((state) => state.userChatSession);
+  const searchHistory = useChatSession((state) => state.searchHistory);
+  const query = useChatSession((state) => state.query);
+
   const setUserChatSession = useChatSession((state) => state.setUserChatSession);
 
   useEffect(() => {
@@ -86,20 +89,32 @@ const SessionHistory = () => {
   const categories = categorizeSessions(userChatSession);
 
   return (
-    <div className="scrollbar h-full  overflow-y-auto ">
+    <div className="scrollbar h-full overflow-y-auto ">
       <div className="px-3 flex flex-col gap-6">
-        {categories.today.length !== 0 && (
-          <Categories title="Today" chatSessions={categories.today} />
-        )}
+        {query.length > 0 ? ( // ✅ Ensure query is actually being checked
+          searchHistory.length > 0 ? (
+            <Categories chatSessions={searchHistory} />
+          ) : (
+            <div className="font-medium text-center text-base font-mono">No results found :/</div> // ✅ Show only when searching but no results found
+          )
+        ) : (
+          <>
+            {categories.today.length !== 0 && (
+              <Categories title="Today" chatSessions={categories.today} />
+            )}
 
-        {categories.yesterday.length !== 0 && (
-          <Categories title="Yesterday" chatSessions={categories.yesterday} />
-        )}
-        {categories.last7Days.length !== 0 && (
-          <Categories title="Previous 7 Days" chatSessions={categories.last7Days} />
-        )}
-        {categories.last30Days.length !== 0 && (
-          <Categories title="Previous 30 Days" chatSessions={categories.last30Days} />
+            {categories.yesterday.length !== 0 && (
+              <Categories title="Yesterday" chatSessions={categories.yesterday} />
+            )}
+
+            {categories.last7Days.length !== 0 && (
+              <Categories title="Previous 7 Days" chatSessions={categories.last7Days} />
+            )}
+
+            {categories.last30Days.length !== 0 && (
+              <Categories title="Previous 30 Days" chatSessions={categories.last30Days} />
+            )}
+          </>
         )}
       </div>
     </div>

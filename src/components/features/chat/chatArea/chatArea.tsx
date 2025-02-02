@@ -24,7 +24,7 @@ const ChatArea = ({
                 "w-fit text-base p-2 rounded-lg",
                 msg.role === "user"
                   ? "max-w-[80%] md:max-w-[47%]"
-                  : "max-w-[90%] md:max-w-[60%] border- dark:bg-neutral-50/5 px-3.5 py-3"
+                  : "max-w-[90%] md:max-w-[60%] dark:bg-neutral-50/5 px-3.5 py-3"
               )}
             >
               {msg.text}
@@ -36,7 +36,7 @@ const ChatArea = ({
       {assistantMessageBuffer && (
         <article>
           <div className=" flex  items-center justify-start">
-            <Card className="w-fit text-base p-2 rounded-lg max-w-[90%] md:max-w-[60%] ">
+            <Card className="w-fit text-base p-2 rounded-lg max-w-[90%] md:max-w-[60%] dark:bg-neutral-50/5 px-3.5 py-3">
               {assistantMessageBuffer}
             </Card>
           </div>

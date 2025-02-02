@@ -6,15 +6,15 @@ const Categories = ({
   title,
   chatSessions,
 }: {
-  title: string;
+  title?: string;
   chatSessions: UserChatSession[];
 }) => {
   // sessionId
   const { id } = useParams<{ id: string }>();
 
   return (
-    <div className="flex flex-col gap-1.5 text-sm font-medium ">
-      <span className="px-2 mb-2 border-neutral-600 ">{title}</span>
+    <div className="flex flex-col gap-1.5 text-sm font-medium">
+      <span className="font-poppins px-2 mb-2 border-neutral-600 ">{title}</span>
       {chatSessions &&
         chatSessions.map((session) => (
           <SessionTitle
