@@ -21,8 +21,6 @@ const Chatbox = ({
       >
         <SubmitButton />
       </Input>
-
-      {/* submit button */}
     </div>
   );
 };

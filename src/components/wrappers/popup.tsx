@@ -1,5 +1,6 @@
 import { cn } from "@/lib/utils";
 import { useEffect, useRef } from "react";
+import { motion } from "motion/react";
 
 const PopupWrapper = ({
   children,
@@ -39,15 +40,16 @@ const PopupWrapper = ({
   if (!isVisible) return null;
 
   return (
-    <div
-      ref={popUpRef}
+    <motion.div
+      initial={{ opacity: 0, scale: 0.5 }}
+      animate={{ opacity: 1, scale: 1 }}
       className={cn(
-        "absolute z-10 right-0 mt-7 grid  text-left  transition-all dark:bg-neutral-700 bg-neutral-100 py-1 px-1 rounded-xl border border-neutral-300 dark:border-neutral-500 shadow-xl",
+        "absolute z-10 right-0 mt-7 grid  text-left   dark:bg-neutral-700 bg-neutral-100 py-1 px-1 rounded-xl border border-neutral-300 dark:border-neutral-500 shadow-xl",
         classname
       )}
     >
-      {children}
-    </div>
+      <div ref={popUpRef}>{children}</div>
+    </motion.div>
   );
 };
 
