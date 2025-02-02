@@ -20,18 +20,29 @@ function handleError(error: unknown) {
 }
 
 export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  try {
-    const { id } = await params;
+  const { id } = await params;
 
+  const rawUserData = req.headers.get("x-user-data");
+  const userData = JSON.parse(rawUserData as string);
+
+  if (!userData) {
+    return NextResponse.json({ status: false, message: "Unauthorized" }, { status: 401 });
+  }
+
+  try {
     validateSessionId(id, uuidRegex);
 
     const data = await db
-      .select({ messages: sessionsTable.messages })
+      .select({ userId: sessionsTable.userId, messages: sessionsTable.messages })
       .from(sessionsTable)
       .where(eq(sessionsTable.id, id));
 
-    if (!data) {
-      return NextResponse.json({ message: "Invalid Request: session not found" }, { status: 404 });
+    if (!data.length) {
+      return NextResponse.json({ message: "Invalid Request" }, { status: 404 });
+    }
+
+    if (data[0].userId !== userData.id) {
+      return NextResponse.json({ status: false, message: "Unauthorized" }, { status: 401 });
     }
 
     return NextResponse.json({ messages: data[0].messages });
@@ -49,11 +60,10 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ i
     const sessionExists = await db
       .select({ count: sql<number>`COUNT(*)` })
       .from(sessionsTable)
-      .where(eq(sessionsTable.id, id))
-      .execute();
+      .where(eq(sessionsTable.id, id));
 
-    if (!sessionExists || sessionExists[0]?.count == 0) {
-      return NextResponse.json({ message: "Session not found", status: false }, { status: 404 });
+    if (!sessionExists.length || sessionExists[0].count === 0) {
+      return NextResponse.json({ message: "Invalid request", status: false }, { status: 404 });
     }
 
     await db.delete(sessionsTable).where(eq(sessionsTable.id, id));

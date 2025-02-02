@@ -2,31 +2,20 @@ import { sessionsTable } from "@/db/schema/session";
 import { randomUUID } from "crypto";
 import { desc, eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/neon-http";
-import { getToken } from "next-auth/jwt";
 import { NextRequest, NextResponse } from "next/server";
 
 const db = drizzle(process.env.DATABASE_URL!);
-const secret = process.env.AUTH_SECRET;
 
 // GET all user chat session by user id
 export async function GET(req: NextRequest) {
-  const token = await getToken({
-    req,
-    secret,
-    cookieName:
-      process.env.NODE_ENV === "production"
-        ? "__Secure-authjs.session-token"
-        : "authjs.session-token",
-  });
+  const rawUserData = req.headers.get("x-user-data");
+  const userData = JSON.parse(rawUserData as string);
 
-  if (!token) {
+  if (!userData) {
     return NextResponse.json({ status: false, message: "Unauthorized" }, { status: 401 });
   }
 
-  // userId
-  const { id } = token;
-
-  if (!id) {
+  if (!userData.id) {
     return NextResponse.json(
       { message: "Invalid request: 'userId' is missing or not a valid UUID" },
       { status: 400 }
@@ -40,33 +29,26 @@ export async function GET(req: NextRequest) {
       updatedAt: sessionsTable.updatedAt,
     })
     .from(sessionsTable)
-    .where(eq(sessionsTable.userId, id as string))
+    .where(eq(sessionsTable.userId, userData.id))
     .orderBy(desc(sessionsTable.updatedAt));
 
   return NextResponse.json(data);
 }
 
+// Create new session
 export async function POST(req: NextRequest) {
-  const token = await getToken({
-    req,
-    secret,
-    cookieName:
-      process.env.NODE_ENV === "production"
-        ? "__Secure-authjs.session-token"
-        : "authjs.session-token",
-  });
+  const rawUserData = req.headers.get("x-user-data");
+  const userData = JSON.parse(rawUserData as string);
 
-  if (!token) {
+  if (!userData) {
     return NextResponse.json({ status: false, message: "Unauthorized" }, { status: 401 });
   }
-
-  const { id } = token;
 
   const sessionId = randomUUID();
 
   const session: typeof sessionsTable.$inferInsert = {
     id: sessionId,
-    userId: id as string,
+    userId: userData.id,
     messages: [],
   };
 

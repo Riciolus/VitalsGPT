@@ -7,6 +7,12 @@ const db = drizzle(process.env.DATABASE_URL!);
 const titleGenURL = process.env.TITLE_GENERATOR_BASE_URL;
 
 export async function POST(req: NextRequest) {
+  const rawUserData = req.headers.get("x-user-data");
+
+  if (!rawUserData) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   const body = await req.json();
 
   const { initialAssistantResponse, sessionId } = body;

@@ -2,7 +2,7 @@ import { NextRequest } from "next/server";
 import { HfInference } from "@huggingface/inference";
 import { drizzle } from "drizzle-orm/neon-http";
 import { sessionsTable } from "@/db/schema/session";
-import { eq, sql } from "drizzle-orm";
+import { and, eq, sql } from "drizzle-orm";
 
 type Message = {
   role: "user" | "assistant";
@@ -31,16 +31,17 @@ async function getSessionHistory(sessionId: string | null): Promise<string | und
     .join("\n");
 }
 
-async function saveToDatabase(message: string, assistantMessage: string, sessionId: string) {
-  if (!sessionId || sessionId === "guest") {
-    return;
-  }
-
+async function saveToDatabase(
+  message: string,
+  assistantMessage: string,
+  sessionId: string,
+  userId: string
+) {
   try {
     const session = await db
       .select()
       .from(sessionsTable)
-      .where(eq(sessionsTable.id, sessionId))
+      .where(and(eq(sessionsTable.id, sessionId), eq(sessionsTable.userId, userId)))
       .limit(1);
 
     if (session.length > 0) {
@@ -71,6 +72,9 @@ export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const message = searchParams.get("message");
   const sessionId = searchParams.get("sessionId");
+
+  const rawUserData = req.headers.get("x-user-data");
+  const userData = JSON.parse(rawUserData as string);
 
   // Validate input message
   if (!message) {
@@ -158,14 +162,15 @@ export async function GET(req: NextRequest) {
         }
 
         // Save to database after streaming completes
-        void saveToDatabase(message, assistantMessage, sessionId as string);
+        if (sessionId !== "guest" && userData?.id) {
+          void saveToDatabase(message, assistantMessage, sessionId as string, userData.id);
+        }
 
         // Close the stream
         controller.close();
       } catch (error) {
         // Send error message to the stream and close it
-        const errorMessage = JSON.stringify({ error: error });
-        controller.enqueue(new TextEncoder().encode(`data: ${errorMessage}\n\n`));
+        controller.enqueue(new TextEncoder().encode(`data: ${error}\n\n`));
         controller.close();
       }
     },
