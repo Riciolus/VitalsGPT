@@ -23,6 +23,7 @@ html {
 
 * {
   @apply transition-colors duration-[50ms];
+  scroll-behavior: smooth;
 }
 
 @layer utilities {
@@ -58,9 +59,14 @@ html {
   .chat-session-scrollbar::-webkit-scrollbar-track {
     background: #031aec; /* Track color
   }
-
-
-
-
-
 */
+
+.chat-start .chat-bubble {
+  @apply rounded-tl-none rounded-bl-[1rem];
+}
+.chat-end .chat-bubble {
+  @apply rounded-tr-none rounded-br-[1rem];
+}
+.chat-bubble:before {
+  @apply top-0 [transform:rotateX(180deg)];
+}

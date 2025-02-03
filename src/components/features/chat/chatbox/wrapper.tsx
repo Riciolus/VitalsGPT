@@ -20,7 +20,7 @@ const ChatboxWrapper = ({
   const updateUserChatSession = useChatSession((state) => state.updateUserChatSession);
 
   return (
-    <div className="absolute bg-background  bottom-0 pb-6 pt-3 w-full flex justify-center text-neutral-500 dark:text-neutral-400 items-center">
+    <div className="absolute bg-background bottom-0 pb-6 pt-3 w-full flex justify-center text-neutral-500 dark:text-neutral-400 items-center">
       {/* input question */}
       <form
         onSubmit={(e) =>

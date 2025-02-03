@@ -1,6 +1,7 @@
 import useChatSession from "@/store/useChatSessionStore";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Categories from "./categories";
+import ChatExamples from "@/components/sidebar/ChatExamples";
 
 export interface UserChatSession {
   sessionId?: string; // or number, depending on your actual data type
@@ -72,6 +73,7 @@ const categorizeSessions = (userChatSession: UserChatSession[]) => {
 };
 
 const SessionHistory = () => {
+  const [isLoading, setIsLoading] = useState(true);
   const userChatSession = useChatSession((state) => state.userChatSession);
   const searchHistory = useChatSession((state) => state.searchHistory);
   const query = useChatSession((state) => state.query);
@@ -81,42 +83,51 @@ const SessionHistory = () => {
   useEffect(() => {
     getUserChatSession()
       .then((res) => {
+        setIsLoading(false);
         setUserChatSession(res);
       })
       .catch((error) => console.log(error));
   }, [setUserChatSession]);
 
+  if (isLoading) {
+    return null;
+  }
+
   const categories = categorizeSessions(userChatSession);
 
   return (
-    <div className="scrollbar h-full overflow-y-auto ">
-      <div className="px-3 flex flex-col gap-6">
-        {query.length > 0 ? ( // ✅ Ensure query is actually being checked
-          searchHistory.length > 0 ? (
-            <Categories chatSessions={searchHistory} />
+    <div className="scrollbar h-max overflow-y-auto ">
+      {userChatSession.length === 0 ? (
+        <ChatExamples />
+      ) : (
+        <div className="px-3 flex flex-col gap-6">
+          {query.length > 0 ? ( // ✅ Ensure query is actually being checked
+            searchHistory.length > 0 ? (
+              <Categories chatSessions={searchHistory} />
+            ) : (
+              <div className="font-medium text-center text-base font-mono">No results found :/</div> // ✅ Show only when searching but no results found
+            )
           ) : (
-            <div className="font-medium text-center text-base font-mono">No results found :/</div> // ✅ Show only when searching but no results found
-          )
-        ) : (
-          <>
-            {categories.today.length !== 0 && (
-              <Categories title="Today" chatSessions={categories.today} />
-            )}
+            <>
+              {categories.today.length !== 0 && (
+                <Categories title="Today" chatSessions={categories.today} />
+              )}
 
-            {categories.yesterday.length !== 0 && (
-              <Categories title="Yesterday" chatSessions={categories.yesterday} />
-            )}
+              {categories.yesterday.length !== 0 && (
+                <Categories title="Yesterday" chatSessions={categories.yesterday} />
+              )}
 
-            {categories.last7Days.length !== 0 && (
-              <Categories title="Previous 7 Days" chatSessions={categories.last7Days} />
-            )}
+              {categories.last7Days.length !== 0 && (
+                <Categories title="Previous 7 Days" chatSessions={categories.last7Days} />
+              )}
 
-            {categories.last30Days.length !== 0 && (
-              <Categories title="Previous 30 Days" chatSessions={categories.last30Days} />
-            )}
-          </>
-        )}
-      </div>
+              {categories.last30Days.length !== 0 && (
+                <Categories title="Previous 30 Days" chatSessions={categories.last30Days} />
+              )}
+            </>
+          )}
+        </div>
+      )}
     </div>
   );
 };

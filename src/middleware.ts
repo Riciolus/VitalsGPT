@@ -13,8 +13,6 @@ export async function middleware(req: NextRequest) {
       NODE_ENV === "production" ? "__Secure-authjs.session-token" : "authjs.session-token",
   });
 
-  console.log(secret);
-  console.log(token);
   // If accessing "/api/session", require authentication
   if (currentPath.startsWith("/api/session") && !token) {
     return NextResponse.json(

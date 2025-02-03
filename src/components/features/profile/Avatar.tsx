@@ -37,7 +37,7 @@ export default function Avatar() {
           alt="@avatar"
           width={100}
           height={100}
-          className="object-cover rounded-full h-7 w-7"
+          className="object-cover rounded-full h-9 w-9"
         />
       </div>
 

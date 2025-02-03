@@ -44,7 +44,7 @@ const PopupWrapper = ({
       initial={{ opacity: 0, scale: 0.5 }}
       animate={{ opacity: 1, scale: 1 }}
       className={cn(
-        "absolute z-10 right-0 mt-7 grid  text-left   dark:bg-neutral-700 bg-neutral-100 py-1 px-1 rounded-xl border border-neutral-300 dark:border-neutral-500 shadow-xl",
+        "absolute z-10 mt-5 top-0 grid  text-left   dark:bg-neutral-700 bg-neutral-100 py-1 px-1 rounded-xl border border-neutral-300 dark:border-neutral-500 shadow-xl",
         classname
       )}
     >

@@ -87,7 +87,7 @@ const GreetsCard = () => {
           return (
             <Card
               key={category.name}
-              className="py-1 px-2  dark:text-neutral-300 text-xs flex items-center gap-2 "
+              className="py-1 px-2  dark:text-neutral-300 hover:bg-pink-100/80 dark:hover:bg-neutral-500/80 transition-colors text-xs flex items-center gap-2 "
             >
               {category.icon}
               <span>{category.name}</span>

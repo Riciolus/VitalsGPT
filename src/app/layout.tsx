@@ -3,7 +3,6 @@ import type { Viewport } from "next";
 import "./globals.css";
 import { ThemeProvider } from "@/components/wrappers/ThemeProvider";
 import { Poppins } from "next/font/google";
-import Navbar from "@/components/layout/Navbar";
 import { SessionProvider } from "next-auth/react";
 
 export const metadata: Metadata = {
@@ -62,7 +61,7 @@ export default async function RootLayout({
       >
         <SessionProvider>
           <ThemeProvider attribute="class" defaultTheme="light">
-            <Navbar />
+            {/* <Navbar /> */}
             <div className="w-full h-full">{children}</div>
           </ThemeProvider>
         </SessionProvider>

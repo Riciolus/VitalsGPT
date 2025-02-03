@@ -76,20 +76,23 @@ export default function VitalsMenu() {
 
   return (
     <>
-      <div className="w-full  flex flex-col justify-center items-center h-full ">
-        <div className="flex flex-col justify-center items-center gap-3   w-full h-full">
+      <div className="w-full flex flex-col justify-center items-center h-full ">
+        <div className="flex flex-col justify-center items-center gap-3    h-full">
           {/* welcome greets */}
           <GreetsCard />
 
-          <div>
-            {/* input question */}
-            <form onSubmit={(e) => handleStartSession(e)}>
-              <Chatbox
-                userMessage={userMessage}
-                placeholder={placeholder}
-                setUserMessage={setUserMessage}
-              />
-            </form>
+          {/* input question */}
+          <form onSubmit={(e) => handleStartSession(e)}>
+            <Chatbox
+              userMessage={userMessage}
+              placeholder={placeholder}
+              setUserMessage={setUserMessage}
+            />
+          </form>
+
+          <div className="w-[65%] md:w-[45%]  text-sm text-center justify-center items-center dark:text-neutral-400">
+            ⚠️ <span className="text-yellow-400">Disclaimer</span>: VitalsGPT is for info only—not
+            medical advice. Always consult a doctor 👨‍⚕️👩‍⚕️ for health concerns. 🚑
           </div>
         </div>
       </div>

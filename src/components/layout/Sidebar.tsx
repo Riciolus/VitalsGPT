@@ -8,6 +8,24 @@ import SessionHistoryWrapper from "../wrappers/SessionHistory";
 import useSidebarStore from "@/store/useSidebarStore";
 import Searchbar from "../features/search/Searchbar";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
+import Image from "next/image";
+import Avatar from "../features/profile/Avatar";
+
+const Logo = () => {
+  return (
+    <Link href="/" className="flex items-center gap-2 px-3">
+      <Image
+        src="/icon.svg"
+        alt="icon"
+        width={30}
+        height={30}
+        style={{ width: "30px", height: "30px" }}
+      />
+      <span className="font-bold">VitalsGPT</span>
+    </Link>
+  );
+};
 
 const ToggleSidebarButton = ({ onClick }: { onClick: () => void }) => {
   return (
@@ -46,17 +64,18 @@ const Sidebar = memo(() => {
   return (
     <div
       className={cn(
-        "w-[295px]  z-50 fixed md:static overflow-hidden h-full bg-background  shrink-0 flex transition-all duration-[50ms] ease-in-out",
-        !toggleSidebar && " w-[40px] h-fit bg-transparent"
+        "w-[295px]  z-50 fixed md:static  h-full overflow-hidden  bg-background   shrink-0 flex transition-all duration-[50ms] ease-in-out",
+        !toggleSidebar && " w-[42px] h-fit bg-transparent"
       )}
     >
       <div
         className={cn(
-          " border-r flex flex-col   border-neutral-200  w-fit dark:border-neutral-700",
+          "scrollbar border-r flex flex-col   border-neutral-200   w-fit dark:border-neutral-700",
           !toggleSidebar && "border-none"
         )}
       >
-        <div className="h-full flex flex-col gap-5 py-3">
+        <div className="h-full flex flex-col gap-5 pt-3 ">
+          <Logo />
           {/* upper content */}
           <div className="flex items-center gap-3 px-3  justify-between w-full">
             {/* toggle sidebar */}
@@ -104,20 +123,52 @@ const Sidebar = memo(() => {
           </div>
 
           {/* sidebar content */}
-          <div className={cn("flex flex-col h-[85%] ", !toggleSidebar && "hidden")}>
+          <div className={cn("flex flex-col h-[85%] overflow-auto", !toggleSidebar && "hidden")}>
             <SessionHistoryWrapper />
           </div>
 
           {/* lower content */}
-          <div
-            className={cn(
-              toggleSidebar ? "flex fixed bottom-1.5 items-center" : "hidden",
-              "px-3  "
-            )}
-          >
-            {/* toggle theme button */}
-            <div className="hidden md:flex">
-              <ThemeButton />
+          <div className={!toggleSidebar ? "hidden " : "h-full max-h-24 "}>
+            <div
+              className={cn(
+                toggleSidebar ? "flex items-center gap-3 w-full  rounded-t-lg " : "hidden",
+                "px-3"
+              )}
+            >
+              {/* toggle theme button */}
+              <div className="flex ps-1 w-fit h-fit ">
+                <ThemeButton />
+              </div>
+
+              <Button className="flex justify-center items-center w-fit h-fit  p-0">
+                <Link href="/reports">
+                  <svg
+                    width="24px"
+                    height="24px"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    className="stroke-neutral-400"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      className="stroke-neutral-400 dark:stroke-neutral-500"
+                      d="M12 8V12M12 16H12.01M7.8 21H16.2C17.8802 21 18.7202 21 19.362 20.673C19.9265 20.3854 20.3854 19.9265 20.673 19.362C21 18.7202 21 17.8802 21 16.2V7.8C21 6.11984 21 5.27976 20.673 4.63803C20.3854 4.07354 19.9265 3.6146 19.362 3.32698C18.7202 3 17.8802 3 16.2 3H7.8C6.11984 3 5.27976 3 4.63803 3.32698C4.07354 3.6146 3.6146 4.07354 3.32698 4.63803C3 5.27976 3 6.11984 3 7.8V16.2C3 17.8802 3 18.7202 3.32698 19.362C3.6146 19.9265 4.07354 20.3854 4.63803 20.673C5.27976 21 6.11984 21 7.8 21Z"
+                      stroke="#000000"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </Link>
+              </Button>
+
+              {/* examples latter jaa */}
+              <Button className="border bg-violet-400 dark:bg-violet-400/40 py-0.5 dark:text-neutral-300 text-neutral-700 w-full rounded-xl">
+                <Link href="/examples/general-health">Examples</Link>
+              </Button>
+            </div>
+            <div className="px-5 h-full pt-3 border-t border-inherit border-neutral-700 ">
+              <Avatar />
             </div>
           </div>
         </div>

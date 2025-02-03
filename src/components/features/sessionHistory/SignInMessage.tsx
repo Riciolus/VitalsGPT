@@ -3,11 +3,11 @@ import { signIn } from "next-auth/react";
 
 const SignInMessage = () => {
   return (
-    <div className="h-full">
-      <div className="mt-8 flex flex-col gap-2 justify-center items-center">
+    <div className="h-fit">
+      <div className="flex flex-col gap-2 justify-center items-center">
         <Button
           onClick={() => signIn()}
-          className="flex justify-center items-center gap-1 outline-none rounded-md border bg-lime-600 dark:bg-lime-800 bg-opacity-25 dark:bg-opacity-55 p-1.5 text-xs transition-all duration-[50ms]"
+          className="flex justify-center items-center gap-1 outline-none rounded-md border bg-lime-600 dark:bg-lime-800 hover:bg-lime-700/55 dark:hover:bg-lime-700/55 bg-opacity-25 dark:bg-opacity-55 p-1.5 text-xs transition-all duration-[50ms]"
         >
           <svg
             className="w-3 h-3 fill-neutral-600 dark:fill-foreground"

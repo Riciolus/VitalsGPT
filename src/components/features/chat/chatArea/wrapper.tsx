@@ -4,6 +4,7 @@ import useChatSession from "@/store/useChatSessionStore";
 import { useSession } from "next-auth/react";
 import { generateTitle, getChatSession, handleEventSource } from "@/lib/utils";
 import { useMessageStore } from "@/store/useMessagesStore";
+import { useRouter } from "next/navigation";
 
 const ChatAreaWrapper = ({
   sessionId,
@@ -22,6 +23,7 @@ const ChatAreaWrapper = ({
   const updateUserChatSession = useChatSession((state) => state.updateUserChatSession);
   const { status } = useSession();
   const chatContainerRef = useRef<HTMLDivElement | null>(null);
+  const router = useRouter();
   // sessionId
 
   // scroll into view
@@ -77,9 +79,11 @@ const ChatAreaWrapper = ({
             setMessages([...messagesFromDb]);
             setIsLoading(false);
           })
-          .catch((error) => {
-            console.error("Error fetching chat session:", error);
+          .catch(() => {
+            router.back();
           });
+      } else if (status === "unauthenticated") {
+        router.replace("/");
       }
     }
   }, [
@@ -91,10 +95,11 @@ const ChatAreaWrapper = ({
     setMessages,
     appendMessage,
     setIsLoading,
+    router,
   ]);
 
   return (
-    <div className="scrollbar overflow-y-auto h-[calc(100vh-9.5rem)]">
+    <div className="scrollbar overflow-y-auto h-[calc(100vh-5.5rem)]">
       {/* the height is just temporary */}
       <div
         ref={chatContainerRef}
