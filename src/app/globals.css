@@ -6,12 +6,15 @@
 :root {
   --background: #fafafa;
   --foreground: #262626;
+  --primary: linear-gradient(to left, #f2f7fc, #ffffff);
+  /* --primary: linear-gradient(to bottom, #f9fafb, #ffffff); */
   --scrollbar: #e5e5e5;
 }
 
 html.dark {
   --background: #262626;
   --foreground: #fafafa;
+  --primary: #242424;
   --scrollbar: #404040;
 }
 
@@ -30,7 +33,7 @@ html {
   /* For Firefox */
   .scrollbar {
     scrollbar-width: thin; /* Thin scrollbar */
-    scrollbar-color: var(--scrollbar) var(--background); /* Thumb color and track color */
+    scrollbar-color: var(--scrollbar) transparent; /* Thumb color and track color */
   }
 }
 

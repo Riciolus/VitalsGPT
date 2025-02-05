@@ -41,8 +41,8 @@ const examples = [
 
 const CommonIllnesses = () => {
   return (
-    <div className="scrollbar px-3 md:px-32 py-8 overflow-auto h-full">
-      <h1 className="font-semibold text-xl mb-5">🤧 Common Illnesses</h1>
+    <>
+      <h1 className="font-semibold text-xl mb-5 text-center md:text-left">🤧 Common Illnesses</h1>
       <div className="flex flex-col gap-12">
         {examples.map((example, index) => (
           <ChatExample
@@ -53,7 +53,7 @@ const CommonIllnesses = () => {
           />
         ))}
       </div>
-    </div>
+    </>
   );
 };
 

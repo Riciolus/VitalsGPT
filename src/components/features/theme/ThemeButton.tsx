@@ -13,7 +13,7 @@ const ThemeButton = () => {
   return (
     <Button
       onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-      className="p-0 h-fit w-fit mb-2 flex justify-center items-center"
+      className="p-0 h-fit w-fit  flex justify-center items-center"
     >
       {isMounted && theme == "light" ? (
         // moon icon

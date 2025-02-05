@@ -38,7 +38,7 @@ const ChatExamples = () => {
         {exampleCategories.map((category, index) => (
           <div
             key={index}
-            className="w-full text-sm font-semibold dark:text-neutral-300 bg-neutral-200/40 dark:bg-neutral-700/55 px-2 py-2.5 rounded-md"
+            className="w-full text-sm font-semibold dark:text-neutral-300 bg-neutral-200/40 dark:bg-neutral-600/20  px-2 py-2.5 rounded-md"
           >
             {category.title}
             <div className="mt-2 font-normal font-mono dark:text-neutral-400 flex flex-col">

@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import type { Viewport } from "next";
-import "./globals.css";
 import { ThemeProvider } from "@/components/wrappers/ThemeProvider";
 import { Poppins } from "next/font/google";
 import { SessionProvider } from "next-auth/react";
+import "./globals.css";
 
 export const metadata: Metadata = {
   // viewport: "width=device-width, initial-scale=1, interactive-widget=resizes-content",
@@ -15,7 +15,7 @@ export const metadata: Metadata = {
     description: "AI-powered web application designed to assist with medical inquiries.",
     images: [
       {
-        url: "/og-image.png", // Path to your OG image
+        url: "/og-image-v2.png", // Path to your OG image
         width: 1200,
         height: 630,
         alt: "Preview of your page",
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "VitalsGPT",
     description: "AI-powered web application designed to assist with medical inquiries.",
-    images: ["/og-image.png"], // Twitter accepts an array of image URLs
+    images: ["/og-image-v2.png"], // Twitter accepts an array of image URLs
   },
 };
 
@@ -60,7 +60,7 @@ export default async function RootLayout({
         className={`${poppins.className} bg-background text-foreground  overflow-hidden  antialiased   h-screen max-h-screen`}
       >
         <SessionProvider>
-          <ThemeProvider attribute="class" defaultTheme="light">
+          <ThemeProvider attribute="class" defaultTheme="system">
             {/* <Navbar /> */}
             <div className="w-full h-full">{children}</div>
           </ThemeProvider>

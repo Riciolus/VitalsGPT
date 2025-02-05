@@ -85,7 +85,12 @@ const SessionTitle = ({
           </button>
 
           {isOption && (
-            <PopupWrapper isVisible={isOption} onClose={() => setIsOption(false)}>
+            <PopupWrapper
+              variant="right"
+              isVisible={isOption}
+              onClose={() => setIsOption(false)}
+              classname="mb-0"
+            >
               <div
                 onClick={handleDeleteChatSession}
                 className="text-red-500 dark:text-red-400 transition-colors hover:bg-red-100 dark:hover:bg-red-800/80 py-1.5 px-2 rounded-lg grid gap-1"

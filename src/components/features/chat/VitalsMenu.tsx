@@ -91,8 +91,9 @@ export default function VitalsMenu() {
           </form>
 
           <div className="w-[65%] md:w-[45%]  text-sm text-center justify-center items-center dark:text-neutral-400">
-            ⚠️ <span className="text-yellow-400">Disclaimer</span>: VitalsGPT is for info only—not
-            medical advice. Always consult a doctor 👨‍⚕️👩‍⚕️ for health concerns. 🚑
+            ⚠️ <span className="text-yellow-600 dark:text-yellow-400">Disclaimer</span>: VitalsGPT
+            is for info only—not medical advice. Always consult a doctor 👨‍⚕️👩‍⚕️ for health concerns.
+            🚑
           </div>
         </div>
       </div>
