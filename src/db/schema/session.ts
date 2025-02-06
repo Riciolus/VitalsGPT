@@ -7,7 +7,7 @@ export const sessionsTable = pgTable("sessions", {
   // Foreign key referencing users.id
   userId: uuid("user_id")
     .notNull()
-    .references(() => usersTable.id),
+    .references(() => usersTable.id, { onDelete: "cascade" }),
   title: text("title").default(""),
   messages: json("messages").notNull(), // JSON field for storing messages
   createdAt: timestamp("created_at").defaultNow(), // Created at timestamp

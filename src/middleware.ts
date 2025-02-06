@@ -37,5 +37,5 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/api/session/:path*", "/api/chat/:path*"], // Apply middleware to all API routes
+  matcher: ["/api/session/:path*", "/api/chat/:path*", "/api/auth/delete"], // Apply middleware to all API routes
 };

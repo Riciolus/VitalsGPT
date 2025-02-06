@@ -15,6 +15,28 @@ export default function Avatar() {
     }
   };
 
+  const handleDeleteAccount = async () => {
+    if (!confirm("Are you sure you want to delete your account? This action cannot be undone.")) {
+      return;
+    }
+
+    try {
+      const res = await fetch("/api/auth/delete", {
+        method: "DELETE",
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.message || "Failed to delete account");
+      }
+
+      // await signOut(); // ✅ Logs the user out after account deletion
+    } catch (error) {
+      console.error("Something went wrong!", error);
+    }
+  };
+
   return (
     <div
       onMouseOver={() => status === "authenticated" && setIsOption(true)}
@@ -67,7 +89,7 @@ export default function Avatar() {
                 className=" bg-fuchsia-300/50 transition-colors hover:bg-pink-500/40 w-full dark:hover:bg-pink-600/60 py-2 px-2 rounded-lg grid gap-1 "
               >
                 <button
-                  disabled
+                  onClick={handleDeleteAccount}
                   className="font-semibold text-left text-sm font-mono text-neutral-600 dark:text-neutral-100"
                 >
                   Delete Acc

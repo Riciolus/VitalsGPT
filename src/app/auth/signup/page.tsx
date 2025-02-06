@@ -51,8 +51,6 @@ export default function SignInPage() {
     }
   }, []);
 
-  console.log(errorMessage);
-
   const handleSignUp = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
