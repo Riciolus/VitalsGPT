@@ -48,7 +48,7 @@ const ChatExample = ({
   question: string;
   answer: string;
 }) => (
-  <div id={number} className="flex flex-col gap-3 md:mx-36 mt-7 py-3">
+  <div id={number} className="flex flex-col gap-3 xl:mx-36 mt-7 py-3">
     <h3 className="font-mono ps-2">Example {number}:</h3>
     <div className="flex justify-end">
       <Card variant="user">{question}</Card>

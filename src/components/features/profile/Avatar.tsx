@@ -1,19 +1,18 @@
 import { useState } from "react";
 import PopupWrapper from "@/components/wrappers/popup";
-import { signIn, signOut, useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 export default function Avatar() {
   const [isOption, setIsOption] = useState(false);
   const { data, status } = useSession();
+  const router = useRouter();
 
   const handleClickAvatar = () => {
     if (status === "unauthenticated") {
-      signIn();
+      router.push("/auth/signup");
     }
-    // } else {
-    //   setIsOption((prev) => !prev); // Toggle popup without re-rendering
-    // }
   };
 
   return (

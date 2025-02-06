@@ -6,8 +6,41 @@ import { signIn } from "next-auth/react";
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 
+type ErrorMessage = Record<string, string>;
+
+const signUp = async ({
+  username,
+  email,
+  password,
+}: {
+  username: string;
+  email: string;
+  password: string;
+}) => {
+  try {
+    const response = await fetch("/api/auth/signup", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, email, password }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.message || "Failed to sign up");
+    }
+
+    return { success: true, message: "Sign-up successful" };
+  } catch (error) {
+    if (error instanceof Error) {
+      return { error: error.message };
+    }
+    return { error: "An unknown error occurred" };
+  }
+};
+
 export default function SignInPage() {
-  const [errorMessage, setErrorMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState<ErrorMessage>({});
   const [isLoading, setIsLoading] = useState(false);
 
   const inputRef = useRef<HTMLInputElement>(null); // Specify the type explicitly
@@ -18,64 +51,105 @@ export default function SignInPage() {
     }
   }, []);
 
-  const handleSignIn = async (e: React.FormEvent<HTMLFormElement>) => {
+  console.log(errorMessage);
+
+  const handleSignUp = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    const formData = new FormData(e.currentTarget);
+    const username = formData.get("username")?.toString().trim() ?? "";
+    const email = formData.get("email")?.toString().trim() ?? "";
+    const password = formData.get("password")?.toString().trim() ?? "";
+
+    const errors: Record<string, string> = {};
+
+    if (!username || username.length < 4) {
+      errors.username = "Username must be at least 4 characters";
+    }
+
+    if (!email || email.length < 4 || !email.includes("@")) {
+      errors.email = "Please enter a valid email";
+    }
+
+    if (!password || password.length < 6) {
+      errors.password = "Password must be at least 6 characters";
+    }
+
+    if (Object.keys(errors).length > 0) {
+      setErrorMessage(errors);
+      return;
+    }
 
     setIsLoading(true);
 
-    const formData = new FormData(e.currentTarget);
+    try {
+      const res = await signUp({ username, email, password });
 
-    const res = await signIn("credentials", {
-      emailOrUsername: formData.get("emailOrUsername"),
-      password: formData.get("password"),
-      redirect: false,
-    });
-
-    if (res?.error) {
-      console.log("Error signing in:", res.error);
-      if (res.error === "CredentialsSignin") {
-        setErrorMessage("Invalid email or password");
+      if (res.error) {
+        setErrorMessage({ general: res.error });
       } else {
-        setErrorMessage("Oops :x.. something went wrong");
-      }
-    } else if (res?.ok) {
-      window.location.href = "/";
-    }
+        // ✅ Auto-login the user after sign-up
+        const signInRes = await signIn("credentials", {
+          emailOrUsername: email,
+          password,
+          redirect: false,
+        });
 
-    setIsLoading((prev) => !prev);
+        if (signInRes?.error) {
+          setErrorMessage({ general: signInRes.error });
+        } else {
+          // Redirect to homepage or dashboard
+          window.location.href = "/";
+        }
+      }
+    } catch {
+      setErrorMessage({ general: "Oops.. something went wrong" });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
     <div className="h-[calc(100vh-4rem)] flex justify-center items-center">
       {/* form */}
-      <div className="border border-neutral-400 shadow-inherit dark:border-neutral-600 w-80 py-8 mx-7 px-6  rounded-lg">
-        <form onSubmit={handleSignIn}>
+      <div className="border border-neutral-400 shadow-inherit dark:border-neutral-600 w-96 py-8 mx-7 px-6  rounded-lg">
+        <form onSubmit={handleSignUp}>
           <div>
-            <h1 className="text-center font-semibold text-2xl">Welcome 🐱</h1>
+            <h1 className="text-center font-semibold text-2xl">Let&#39;s get started! 😸</h1>
 
             {/* Credentials */}
             <div className="my-5 flex flex-col gap-3">
               <div className="grid gap-1">
                 <label htmlFor="email/username" className="text-sm">
-                  Email{" "}
-                  <span className="text-sm text-neutral-700 dark:text-neutral-400 text-ne">/</span>{" "}
                   Username
                 </label>
-                <Input
-                  ref={inputRef}
-                  id="email/username"
-                  name="emailOrUsername"
-                  placeholder="Kai Cenat"
-                  required
-                />
+                <Input ref={inputRef} id="username" name="username" placeholder="Kai Cenat" />
+                {errorMessage.username && (
+                  <span className="text-red-500 text-sm">{errorMessage.username}</span>
+                )}
+              </div>
+              <div className="grid gap-1">
+                <label htmlFor="email" className="text-sm">
+                  Email
+                </label>
+                <Input id="email" name="email" placeholder="kai@gmail.com" />
+                {errorMessage.email && (
+                  <span className="text-red-500 text-sm">{errorMessage.email}</span>
+                )}
               </div>
               <div className="grid gap-1">
                 <label htmlFor="password" className="text-sm">
                   Password
                 </label>
-                <Input id="password" name="password" type="password" placeholder="*****" required />
+                <Input id="password" name="password" type="password" placeholder="*****" />
+                {errorMessage.password && (
+                  <span className="text-red-500 text-sm">{errorMessage.password}</span>
+                )}
               </div>
-              {errorMessage && <span className="text-red-500 text-sm">{errorMessage}</span>}
+
+              {errorMessage.general && (
+                <span className="text-red-500 text-sm">{errorMessage.general}</span>
+              )}
             </div>
 
             <div className="w-full flex flex-col justify-center  gap-3">
@@ -101,7 +175,7 @@ export default function SignInPage() {
                 <Button
                   type="button"
                   onClick={() => signIn("google", { redirectTo: "/" })}
-                  className="border w-full flex justify-center items-center"
+                  className="border w-full flex justify-center items-center hover:bg-neutral-500/10"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -133,7 +207,7 @@ export default function SignInPage() {
                 {/* Facebook Provider */}
                 <Button
                   disabled
-                  className="cursor-not-allowed border w-full flex justify-center items-center"
+                  className="cursor-not-allowed border w-full flex justify-center items-center hover:bg-neutral-500/10"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -169,7 +243,7 @@ export default function SignInPage() {
                 <Button
                   onClick={() => signIn("github", { redirectTo: "/" })}
                   type="button"
-                  className="border w-full flex justify-center items-center"
+                  className="border w-full flex justify-center items-center hover:bg-neutral-500/10"
                 >
                   <svg
                     className="dark:fill-neutral-200"
@@ -184,11 +258,10 @@ export default function SignInPage() {
                   </svg>
                 </Button>
               </div>
-
               <div className="text-center font-mono text-sm cursor-default">
-                New here?{" "}
-                <Link href="/auth/signup" className="hover:underline">
-                  Sign Up
+                Have an account?{" "}
+                <Link href="/auth/signin" className="hover:underline">
+                  Sign In
                 </Link>
               </div>
             </div>
