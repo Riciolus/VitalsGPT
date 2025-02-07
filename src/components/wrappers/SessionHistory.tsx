@@ -9,15 +9,15 @@ const SessionHistoryWrapper = () => {
 
   if (status === "authenticated") {
     return <SessionHistory />;
-  } else if (status === "loading") {
-    return <></>;
-  } else {
+  } else if (status === "unauthenticated") {
     return (
       <div className="flex flex-col gap-2 overflow-hidden">
         <SignInMessage />
         <ChatExamples />
       </div>
     );
+  } else {
+    return null;
   }
 };
 

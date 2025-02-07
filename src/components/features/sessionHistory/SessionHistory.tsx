@@ -2,6 +2,7 @@ import useChatSession from "@/store/useChatSessionStore";
 import { useEffect, useState } from "react";
 import Categories from "./categories";
 import ChatExamples from "@/components/sidebar/ChatExamples";
+import { cn } from "@/lib/utils";
 
 export interface UserChatSession {
   sessionId?: string; // or number, depending on your actual data type
@@ -83,14 +84,27 @@ const SessionHistory = () => {
   useEffect(() => {
     getUserChatSession()
       .then((res) => {
-        setIsLoading(false);
         setUserChatSession(res);
       })
+      .finally(() => setTimeout(() => setIsLoading(false), 1000))
       .catch((error) => console.log(error));
   }, [setUserChatSession]);
 
   if (isLoading) {
-    return null;
+    return (
+      <div className="px-5 grid gap-2.5 ">
+        {Array.from({ length: 12 }, (_, i) => (
+          <div
+            key={i}
+            className={cn(
+              "w-full h-7 opacity-20 rounded-md animate-pulse bg-neutral-300 dark:bg-neutral-700",
+              i > 5 && "opacity-10",
+              i > 9 && "opacity-5"
+            )}
+          />
+        ))}
+      </div>
+    );
   }
 
   const categories = categorizeSessions(userChatSession);
