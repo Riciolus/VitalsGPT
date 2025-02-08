@@ -1,7 +1,8 @@
 import { cn } from "@/lib/utils";
 
 type ButtonProps = {
-  children: React.ReactNode;
+  isDefault?: boolean;
+  children: React.ReactNode | string;
   onClick?: () => void;
   className?: string;
   disabled?: boolean;
@@ -9,6 +10,7 @@ type ButtonProps = {
 };
 
 const Button = ({
+  isDefault = false,
   children,
   onClick,
   className,
@@ -22,7 +24,8 @@ const Button = ({
         onClick={onClick}
         disabled={disabled}
         className={cn(
-          "border-neutral-200 dark:border-neutral-700 text-sm font-medium transition-colors rounded-lg px-3 py-2",
+          !isDefault &&
+            "border-neutral-200 dark:border-neutral-700 text-sm font-medium transition-colors rounded-lg px-3 py-2",
           className
         )}
       >
