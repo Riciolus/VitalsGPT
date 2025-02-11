@@ -33,7 +33,10 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
     validateSessionId(id, uuidRegex);
 
     const data = await db
-      .select({ userId: sessionsTable.userId, messages: sessionsTable.messages })
+      .select({
+        userId: sessionsTable.userId,
+        messages: sessionsTable.messages,
+      })
       .from(sessionsTable)
       .where(eq(sessionsTable.id, id));
 

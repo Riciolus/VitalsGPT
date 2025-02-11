@@ -9,6 +9,7 @@ export const sessionsTable = pgTable("sessions", {
     .notNull()
     .references(() => usersTable.id, { onDelete: "cascade" }),
   title: text("title").default(""),
+  // model: text("model").default("zephyr-7b-alpha").notNull(),
   messages: json("messages").notNull(), // JSON field for storing messages
   createdAt: timestamp("created_at").defaultNow(), // Created at timestamp
   updatedAt: timestamp("updated_at").defaultNow(), // Updated at timestamp

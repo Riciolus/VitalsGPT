@@ -4,6 +4,7 @@ import { useMessageStore } from "@/store/useMessagesStore";
 import { useState } from "react";
 import { useSession } from "next-auth/react";
 import useChatSession from "@/store/useChatSessionStore";
+import useModelStore from "@/store/useModelsStore";
 
 const ChatboxWrapper = ({
   sessionId,
@@ -18,9 +19,10 @@ const ChatboxWrapper = ({
 
   const appendMessage = useMessageStore((state) => state.appendMessage);
   const updateUserChatSession = useChatSession((state) => state.updateUserChatSession);
+  const model = useModelStore((state) => state.model);
 
   return (
-    <div className="absolute bg-background bottom-0 pb-6 pt-3 w-full flex justify-center text-neutral-500 dark:text-neutral-400 items-center">
+    <div className="pt-2.5   w-full flex justify-center items-center text-neutral-500 dark:text-neutral-400 ">
       {/* input question */}
       <form
         onSubmit={(e) =>
@@ -32,7 +34,8 @@ const ChatboxWrapper = ({
             appendMessage,
             setUserMessage,
             setAssistantMessageBuffer,
-            updateUserChatSession
+            updateUserChatSession,
+            model
           )
         }
       >

@@ -27,7 +27,7 @@ const ChatArea = ({
             <Card
               variant={msg.role}
               className={cn(
-                "w-fit text-base p-2 rounded-lg",
+                "w-fit text-base p-2 rounded-lg break-words whitespace-pre-line",
                 msg.role === "user"
                   ? "max-w-[80%] md:max-w-[47%]"
                   : "max-w-[95%] md:max-w-[60%] mt-2.5 rounded-tl-sm"
@@ -46,7 +46,7 @@ const ChatArea = ({
 
             <Card
               variant="assistant"
-              className="w-fit text-base p-2 rounded-lg max-w-[95%] md:max-w-[60%] mt-2.5 rounded-tl-sm"
+              className="w-fit text-base p-2 rounded-lg max-w-[95%] md:max-w-[60%] mt-2.5 rounded-tl-sm break-words whitespace-pre-line"
             >
               {assistantMessageBuffer}
             </Card>
