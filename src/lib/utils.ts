@@ -50,8 +50,26 @@ export const handleEventSource = (
     let buffer = "";
 
     eventSource.onmessage = (event) => {
-      buffer += event.data;
-      setAssistantMessageBuffer(buffer); // Buffer for live updates
+      // Properly handle markdown line breaks in the buffer
+      if (event.data.trim()) {
+        // If it's not just whitespace, add the content
+        buffer += event.data;
+      } else {
+        // If it's an empty line, add a markdown paragraph break
+        buffer += "\n\n";
+      }
+
+      // Clean up the buffer to ensure proper markdown formatting
+      const formattedBuffer = buffer
+        // Ensure proper spacing for markdown elements
+        .replace(/\n(#{1,6})/g, "\n\n$1") // Headers
+        .replace(/\n([*-])/g, "\n\n$1") // List items
+        .replace(/\n(>)/g, "\n\n$1") // Blockquotes
+        // Replace multiple newlines with exactly two
+        .replace(/\n{3,}/g, "\n\n")
+        .trim();
+
+      setAssistantMessageBuffer(formattedBuffer);
     };
 
     eventSource.onerror = () => {
@@ -93,7 +111,6 @@ export const getChatSession = async (sessionId: string) => {
     },
   });
   const data = await response.json();
-  console.log(data);
   return data;
 };
 

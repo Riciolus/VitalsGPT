@@ -25,7 +25,7 @@ const ModelType: React.FC = () => {
         href={
           model === "zephyr-7b-alpha"
             ? "https://huggingface.co/HuggingFaceH4/zephyr-7b-alpha"
-            : "https://openrouter.ai/mistralai/mistral-small"
+            : "https://mistral.ai/en/news/mistral-small-3"
         }
         className={cn(
           "rounded-br-xl",

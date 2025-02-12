@@ -11,7 +11,7 @@ type Message = {
   text: string;
 };
 
-export const dynamic = "force-dynamic"; // Prevents caching on Vercel
+export const dynamic = "force-dynamic";
 
 const db = drizzle(process.env.DATABASE_URL!);
 const HuggingFaceToken = process.env.NEXT_PUBLIC_INFERENCE_API_TOKEN;
@@ -34,9 +34,8 @@ export async function GET(req: NextRequest) {
   }
 
   const chatHistory = await getSessionHistory(sessionId);
-  const inputPrompt = `${chatHistory}\nUser: ${message}\nYour answer:`;
+  const inputPrompt = `${chatHistory}\n\nUser: ${message}\n\nYour answer:`;
 
-  // Create a TransformStream to intercept and collect the assistant's response
   const { readable, writable } = new TransformStream();
   const decoder = new TextDecoder();
 
@@ -44,17 +43,23 @@ export async function GET(req: NextRequest) {
 
   const transformStream = new TransformStream({
     transform(chunk, controller) {
-      // Decode the chunk and extract the actual content
       const text = decoder.decode(chunk);
       const match = text.match(/data: (.*)\n\n/);
+
       if (match) {
-        const content = match[1];
+        let content = match[1];
+
+        // Special handling for newline chunks
+        if (text === "data: \n\n\n") {
+          // This is a pure newline chunk
+          content = "\n";
+        }
+
         assistantMessage += content;
+        controller.enqueue(chunk);
       }
-      controller.enqueue(chunk);
     },
     flush(controller) {
-      // Save to database after the stream is complete
       if (sessionId !== "guest" && userData?.id) {
         void saveToDatabase(message, assistantMessage, sessionId as string, userData.id);
       }
@@ -62,7 +67,6 @@ export async function GET(req: NextRequest) {
     },
   });
 
-  // Choose the appropriate model and pipe through our transform stream
   let modelStream: ReadableStream;
   if (model === "zephyr-7b-alpha") {
     modelStream = await streamZephyrResponse(inputPrompt);
@@ -72,7 +76,6 @@ export async function GET(req: NextRequest) {
     return new Response(JSON.stringify({ error: "Invalid model" }), { status: 400 });
   }
 
-  // Pipe the model stream through our transform stream
   modelStream.pipeThrough(transformStream).pipeTo(writable);
 
   return new Response(readable, {
@@ -105,9 +108,7 @@ const streamZephyrResponse = async (inputPrompt: string) => {
 
         for await (const chunk of generator) {
           if (chunk.choices?.[0]?.delta?.content) {
-            const newContent = chunk.choices[0].delta.content;
-
-            controller.enqueue(encoder.encode(`data: ${newContent}\n\n`));
+            controller.enqueue(encoder.encode(`data: ${chunk.choices[0].delta.content}\n\n`));
           }
         }
 
@@ -154,19 +155,19 @@ const streamMitralsResponse = async (inputPrompt: string) => {
 async function getSessionHistory(sessionId: string | null): Promise<string | undefined> {
   if (!sessionId || sessionId === "guest") return;
 
-  // Query the database
   const result = await db
     .select({ messages: sessionsTable.messages })
     .from(sessionsTable)
     .where(eq(sessionsTable.id, sessionId));
 
-  // Extract the messages from the first row
   const messages: Message[] = result[0].messages as Message[];
 
-  // Construct session history as a formatted string
   return messages
-    .map((msg) => `${msg.role === "user" ? "User" : "Assistant"}: ${msg.text}`)
-    .join("\n");
+    .map((msg) => {
+      const role = msg.role === "user" ? "User" : "Assistant";
+      return `${role}: ${msg.text}`;
+    })
+    .join("\n\n");
 }
 
 async function saveToDatabase(
@@ -176,7 +177,6 @@ async function saveToDatabase(
   userId: string
 ) {
   try {
-    // Step 1: Fetch the existing session
     const session = await db
       .select()
       .from(sessionsTable)
@@ -186,14 +186,18 @@ async function saveToDatabase(
     if (session.length > 0) {
       const existingMessages = Array.isArray(session[0].messages) ? session[0].messages : [];
 
-      // Step 2: Append new messages
       const updatedMessages = [
         ...existingMessages,
-        { role: "user", text: userMessage },
-        { role: "assistant", text: assistantMessage },
+        {
+          role: "user",
+          text: userMessage.trim(),
+        },
+        {
+          role: "assistant",
+          text: assistantMessage.trim(),
+        },
       ];
 
-      // Step 3: Update the database with new messages
       await db
         .update(sessionsTable)
         .set({ messages: updatedMessages, updatedAt: sql`NOW()` })
