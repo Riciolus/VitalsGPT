@@ -1,5 +1,6 @@
 import Input from "@/components/ui/input";
 import SubmitButton from "./submitButton";
+import ModelsType from "./modelsType";
 
 const Chatbox = ({
   userMessage,
@@ -11,7 +12,7 @@ const Chatbox = ({
   placeholder: string;
 }) => {
   return (
-    <div className="flex">
+    <div className="flex flex-col">
       <Input
         id="vitalsInput"
         onChange={(e) => setUserMessage(e.target.value)}
@@ -21,6 +22,7 @@ const Chatbox = ({
       >
         <SubmitButton />
       </Input>
+      <ModelsType />
     </div>
   );
 };

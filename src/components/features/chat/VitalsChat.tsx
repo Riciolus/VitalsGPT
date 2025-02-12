@@ -15,14 +15,13 @@ export default function ChatInterface() {
   const { id } = useParams<{ id: string }>();
 
   return (
-    <div className="vitals-chat-wrapper md:relative w-full">
+    <div className="vitals-chat-wrapper md:relative w-full h-screen">
       {/* chat area */}
       <ChatAreaWrapper
         sessionId={id}
         assistantMessageBuffer={assistantMessageBuffer}
         setAssistantMessageBuffer={setAssistantMessageBuffer}
       />
-
       <ChatboxWrapper sessionId={id} setAssistantMessageBuffer={setAssistantMessageBuffer} />
     </div>
   );
