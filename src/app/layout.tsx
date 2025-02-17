@@ -57,7 +57,7 @@ export default async function RootLayout({
         <link rel="apple-touch-icon" href="/icon.svg" type="image/svg+xml" />
       </head>
       <body
-        className={`${poppins.className} bg-background text-foreground  overflow-hidden  antialiased   h-screen max-h-screen`}
+        className={`${poppins.className} bg-background text-foreground  overflow-hidden  antialiased  h-svh  max-h-screen`}
       >
         <SessionProvider>
           <ThemeProvider attribute="class" defaultTheme="system">

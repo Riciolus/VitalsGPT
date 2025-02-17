@@ -22,7 +22,7 @@ const ChatboxWrapper = ({
   const model = useModelStore((state) => state.model);
 
   return (
-    <div className="pt-2.5   w-full flex justify-center items-center text-neutral-500 dark:text-neutral-400 ">
+    <div className="pt-2.5 pb-3 bg-background w-full flex justify-center items-center text-neutral-500 dark:text-neutral-400 ">
       {/* input question */}
       <form
         onSubmit={(e) =>

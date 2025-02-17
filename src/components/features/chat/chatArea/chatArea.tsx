@@ -5,7 +5,9 @@ import ReactMarkdown, { Components } from "react-markdown";
 
 const MarkdownComponents: Components = {
   p: ({ children }) => <p className="mb-0">{children}</p>,
-  strong: ({ children }) => <strong className="text-neutral-200 fon-medium">{children}</strong>,
+  strong: ({ children }) => (
+    <strong className=" text-neutral-700 dark:text-neutral-200 fon-medium">{children}</strong>
+  ),
 
   // Style headers
   h1: ({ children }) => <h1 className="text-2xl font-bold mb-2">{children}</h1>,
