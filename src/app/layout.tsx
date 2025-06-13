@@ -51,7 +51,9 @@ export default async function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
+        <script src="https://unpkg.com/react-scan/dist/auto.global.js" async></script>
         {/* Favicon for most browsers */}
+
         <link rel="icon" href="/icon.svg" type="image/svg+xml" />
         {/* Apple Touch Icon */}
         <link rel="apple-touch-icon" href="/icon.svg" type="image/svg+xml" />

@@ -15,6 +15,20 @@
       "when": 1736881537436,
       "tag": "0001_clumsy_harrier",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1749840055297,
+      "tag": "0002_lame_blindfold",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1749841242134,
+      "tag": "0003_goofy_ghost_rider",
+      "breakpoints": true
     }
   ]
 }

@@ -8,7 +8,7 @@ const Chatbox = ({
   placeholder,
 }: {
   userMessage: string;
-  setUserMessage: React.Dispatch<React.SetStateAction<string>>;
+  setUserMessage: (newMessage: string) => void;
   placeholder: string;
 }) => {
   return (

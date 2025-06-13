@@ -11,6 +11,7 @@
   "dependencies": {
     "@huggingface/inference": "^2.8.1",
     "@neondatabase/serverless": "^0.10.4",
+    "babel-plugin-react-compiler": "^19.0.0-beta-e1e972c-20250221",
     "bcryptjs": "^2.4.3",
     "clsx": "^2.1.1",
     "drizzle-orm": "^0.38.3",
