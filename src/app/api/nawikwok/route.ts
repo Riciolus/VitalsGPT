@@ -4,6 +4,17 @@ import { NextRequest, NextResponse } from "next/server";
 
 const db = drizzle(process.env.DATABASE_URL!);
 
+export async function OPTIONS() {
+  return new NextResponse(null, {
+    status: 200,
+    headers: {
+      "Access-Control-Allow-Origin": "http://127.0.0.1:5500",
+      "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+      "Access-Control-Allow-Headers": "Content-Type",
+    },
+  });
+}
+
 export async function POST(req: NextRequest) {
   const body = await req.json();
 
