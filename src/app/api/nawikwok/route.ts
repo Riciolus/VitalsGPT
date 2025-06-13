@@ -23,7 +23,12 @@ export async function POST(req: NextRequest) {
   try {
     await db.insert(nawikwokTable).values({ name, text });
 
-    return NextResponse.json({ status: "jos" });
+    return NextResponse.json({
+      status: "jos",
+      headers: {
+        "Access-Control-Allow-Origin": "http://127.0.0.1:5500",
+      },
+    });
   } catch (error) {
     return NextResponse.json({ status: false, error });
   }
@@ -32,5 +37,9 @@ export async function POST(req: NextRequest) {
 export async function GET() {
   const data = await db.select().from(nawikwokTable);
 
-  return NextResponse.json(data);
+  return NextResponse.json(data, {
+    headers: {
+      "Access-Control-Allow-Origin": "http://127.0.0.1:5500",
+    },
+  });
 }
